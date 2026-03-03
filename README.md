@@ -94,7 +94,7 @@
 **1. Clone repository**
 
 ```bash
-git clone https://github.com/username/Personal-Portfolio.git
+git clone https://github.com/SuhastraDev/Personal-Portfolio.git
 cd SuhastraDev
 ```
 
