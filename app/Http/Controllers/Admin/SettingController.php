@@ -12,19 +12,22 @@ class SettingController extends Controller
 {
     public function index()
     {
-        $groups = Setting::orderBy('group')->orderBy('id')->get()->groupBy('group');
+        $allSettings = Setting::orderBy('group')->orderBy('id')->get();
+        $groups = $allSettings->groupBy('group');
+        $raw = $allSettings->pluck('value', 'key');
+        $rawEn = $allSettings->pluck('value_en', 'key');
 
-        return view('admin.settings.index', compact('groups'));
+        return view('admin.settings.index', compact('groups', 'raw', 'rawEn'));
     }
 
     public function update(Request $request)
     {
-        $settings = $request->except('_token', '_method', 'en');
+        $settings = $request->except('_token', '_method', 'en', 'active_tab');
         $fileFields = ['about_photo', 'site_logo', 'site_favicon'];
 
         foreach ($fileFields as $field) {
             if ($request->hasFile($field)) {
-                $oldValue = setting($field);
+                $oldValue = Setting::where('key', $field)->value('value');
                 if ($oldValue) {
                     Storage::disk('public')->delete($oldValue);
                 }
@@ -61,6 +64,8 @@ class SettingController extends Controller
 
         clear_setting_cache();
 
-        return back()->with('success', 'Pengaturan berhasil disimpan.');
+        $tab = $request->input('active_tab', 'hero');
+        return redirect()->route('admin.settings.index', ['tab' => $tab])
+            ->with('success', 'Pengaturan berhasil disimpan.');
     }
 }

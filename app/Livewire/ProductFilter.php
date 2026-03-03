@@ -48,9 +48,10 @@ class ProductFilter extends Component
         }
 
         if ($this->search) {
-            $query->where(function ($q) {
-                $q->where('title', 'like', "%{$this->search}%")
-                    ->orWhere('description', 'like', "%{$this->search}%");
+            $escaped = str_replace(['%', '_'], ['\%', '\_'], $this->search);
+            $query->where(function ($q) use ($escaped) {
+                $q->where('title', 'like', "%{$escaped}%")
+                    ->orWhere('description', 'like', "%{$escaped}%");
             });
         }
 

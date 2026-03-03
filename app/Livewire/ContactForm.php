@@ -71,7 +71,7 @@ class ContactForm extends Component
 
             // Forward pesan ke email admin
             try {
-                Mail::to('indrajayabta414@gmail.com')->send(new ContactFormMail($contact));
+                Mail::to(setting('contact_email', 'indrajayabta414@gmail.com'))->send(new ContactFormMail($contact));
             } catch (\Exception $e) {
                 // Email gagal tapi pesan tetap tersimpan di database
                 \Illuminate\Support\Facades\Log::warning('Contact email forwarding failed: ' . $e->getMessage());

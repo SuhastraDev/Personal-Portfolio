@@ -168,6 +168,7 @@ class ProductController extends Controller
 
         // Process additional images
         if ($request->hasFile('images')) {
+            $baseOrder = $product->images()->count();
             foreach ($request->file('images') as $index => $file) {
                 $img = Image::read($file);
                 $img->scaleDown(1200);
@@ -176,7 +177,7 @@ class ProductController extends Controller
 
                 $product->images()->create([
                     'image_path' => $imgPath,
-                    'order' => $product->images()->count() + $index,
+                    'order' => $baseOrder + $index,
                 ]);
             }
         }

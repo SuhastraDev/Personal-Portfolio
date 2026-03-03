@@ -30,6 +30,7 @@
     <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+        <input type="hidden" name="active_tab" :value="activeTab">
 
         <div class="p-6">
             {{-- Tab: Hero --}}
@@ -38,24 +39,24 @@
                 <div class="space-y-4 max-w-2xl">
                     <div>
                         <label for="hero_title" class="block text-sm font-medium text-gray-700 mb-1">Judul Hero</label>
-                        <input type="text" name="hero_title" id="hero_title" value="{{ setting('hero_title') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <input type="text" name="hero_title" id="hero_title" value="{{ $raw['hero_title'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                     </div>
                     <div>
                         <label for="hero_subtitle" class="block text-sm font-medium text-gray-700 mb-1">Subtitle Hero</label>
-                        <input type="text" name="hero_subtitle" id="hero_subtitle" value="{{ setting('hero_subtitle') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <input type="text" name="hero_subtitle" id="hero_subtitle" value="{{ $raw['hero_subtitle'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                     </div>
                     <div>
                         <label for="hero_description" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Hero</label>
-                        <textarea name="hero_description" id="hero_description" rows="3" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">{{ setting('hero_description') }}</textarea>
+                        <textarea name="hero_description" id="hero_description" rows="3" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">{{ $raw['hero_description'] ?? '' }}</textarea>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label for="hero_cta_text" class="block text-sm font-medium text-gray-700 mb-1">Teks Tombol CTA</label>
-                            <input type="text" name="hero_cta_text" id="hero_cta_text" value="{{ setting('hero_cta_text') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <input type="text" name="hero_cta_text" id="hero_cta_text" value="{{ $raw['hero_cta_text'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                         </div>
                         <div>
                             <label for="hero_cta_url" class="block text-sm font-medium text-gray-700 mb-1">URL Tombol CTA</label>
-                            <input type="text" name="hero_cta_url" id="hero_cta_url" value="{{ setting('hero_cta_url') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <input type="text" name="hero_cta_url" id="hero_cta_url" value="{{ $raw['hero_cta_url'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                         </div>
                     </div>
 
@@ -64,19 +65,19 @@
                         <h4 class="text-sm font-semibold text-blue-700">🌐 English Translation</h4>
                         <div>
                             <label for="en_hero_title" class="block text-sm font-medium text-blue-600 mb-1">Hero Title (EN)</label>
-                            <input type="text" name="en[hero_title]" id="en_hero_title" value="{{ \App\Models\Setting::where('key','hero_title')->value('value_en') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="e.g. Hello, I am...">
+                            <input type="text" name="en[hero_title]" id="en_hero_title" value="{{ $rawEn['hero_title'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="e.g. Hello, I am...">
                         </div>
                         <div>
                             <label for="en_hero_subtitle" class="block text-sm font-medium text-blue-600 mb-1">Hero Subtitle (EN)</label>
-                            <input type="text" name="en[hero_subtitle]" id="en_hero_subtitle" value="{{ \App\Models\Setting::where('key','hero_subtitle')->value('value_en') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="e.g. Full Stack Developer">
+                            <input type="text" name="en[hero_subtitle]" id="en_hero_subtitle" value="{{ $rawEn['hero_subtitle'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="e.g. Full Stack Developer">
                         </div>
                         <div>
                             <label for="en_hero_description" class="block text-sm font-medium text-blue-600 mb-1">Hero Description (EN)</label>
-                            <textarea name="en[hero_description]" id="en_hero_description" rows="3" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="English description...">{{ \App\Models\Setting::where('key','hero_description')->value('value_en') }}</textarea>
+                            <textarea name="en[hero_description]" id="en_hero_description" rows="3" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="English description...">{{ $rawEn['hero_description'] ?? '' }}</textarea>
                         </div>
                         <div>
                             <label for="en_hero_cta_text" class="block text-sm font-medium text-blue-600 mb-1">CTA Button Text (EN)</label>
-                            <input type="text" name="en[hero_cta_text]" id="en_hero_cta_text" value="{{ \App\Models\Setting::where('key','hero_cta_text')->value('value_en') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="e.g. View My Work">
+                            <input type="text" name="en[hero_cta_text]" id="en_hero_cta_text" value="{{ $rawEn['hero_cta_text'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="e.g. View My Work">
                         </div>
                     </div>
                 </div>
@@ -88,17 +89,17 @@
                 <div class="space-y-4 max-w-2xl">
                     <div>
                         <label for="about_name" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                        <input type="text" name="about_name" id="about_name" value="{{ setting('about_name') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <input type="text" name="about_name" id="about_name" value="{{ $raw['about_name'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                     </div>
                     <div>
                         <label for="about_bio" class="block text-sm font-medium text-gray-700 mb-1">Bio / Deskripsi</label>
-                        <textarea name="about_bio" id="about_bio" rows="5" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">{{ setting('about_bio') }}</textarea>
+                        <textarea name="about_bio" id="about_bio" rows="5" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">{{ $raw['about_bio'] ?? '' }}</textarea>
                     </div>
                     <div>
                         <label for="about_photo" class="block text-sm font-medium text-gray-700 mb-1">Foto Profil</label>
-                        @if (setting('about_photo'))
+                        @if ($raw['about_photo'] ?? null)
                         <div class="mb-2">
-                            <img src="{{ asset('storage/' . setting('about_photo')) }}" alt="Foto Profil" class="w-24 h-24 rounded-lg object-cover">
+                            <img src="{{ asset('storage/' . $raw['about_photo']) }}" alt="Foto Profil" class="w-24 h-24 rounded-lg object-cover">
                         </div>
                         @endif
                         <input type="file" name="about_photo" id="about_photo" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
@@ -107,15 +108,15 @@
                     <div class="grid grid-cols-3 gap-4">
                         <div>
                             <label for="about_experience_years" class="block text-sm font-medium text-gray-700 mb-1">Tahun Pengalaman</label>
-                            <input type="number" name="about_experience_years" id="about_experience_years" value="{{ setting('about_experience_years') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <input type="number" name="about_experience_years" id="about_experience_years" value="{{ $raw['about_experience_years'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                         </div>
                         <div>
                             <label for="about_projects_count" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Proyek</label>
-                            <input type="number" name="about_projects_count" id="about_projects_count" value="{{ setting('about_projects_count') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <input type="number" name="about_projects_count" id="about_projects_count" value="{{ $raw['about_projects_count'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                         </div>
                         <div>
                             <label for="about_clients_count" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Klien</label>
-                            <input type="number" name="about_clients_count" id="about_clients_count" value="{{ setting('about_clients_count') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <input type="number" name="about_clients_count" id="about_clients_count" value="{{ $raw['about_clients_count'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                         </div>
                     </div>
 
@@ -124,11 +125,11 @@
                         <h4 class="text-sm font-semibold text-blue-700">🌐 English Translation</h4>
                         <div>
                             <label for="en_about_name" class="block text-sm font-medium text-blue-600 mb-1">Full Name (EN)</label>
-                            <input type="text" name="en[about_name]" id="en_about_name" value="{{ \App\Models\Setting::where('key','about_name')->value('value_en') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="e.g. John Doe">
+                            <input type="text" name="en[about_name]" id="en_about_name" value="{{ $rawEn['about_name'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="e.g. John Doe">
                         </div>
                         <div>
                             <label for="en_about_bio" class="block text-sm font-medium text-blue-600 mb-1">Bio / Description (EN)</label>
-                            <textarea name="en[about_bio]" id="en_about_bio" rows="5" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="English bio...">{{ \App\Models\Setting::where('key','about_bio')->value('value_en') }}</textarea>
+                            <textarea name="en[about_bio]" id="en_about_bio" rows="5" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="English bio...">{{ $rawEn['about_bio'] ?? '' }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -140,29 +141,33 @@
                 <div class="space-y-4 max-w-2xl">
                     <div>
                         <label for="contact_email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input type="email" name="contact_email" id="contact_email" value="{{ setting('contact_email') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <input type="email" name="contact_email" id="contact_email" value="{{ $raw['contact_email'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                    </div>
+                    <div>
+                        <label for="contact_phone" class="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon</label>
+                        <input type="text" name="contact_phone" id="contact_phone" value="{{ $raw['contact_phone'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm" placeholder="081234567890">
                     </div>
                     <div>
                         <label for="contact_whatsapp" class="block text-sm font-medium text-gray-700 mb-1">WhatsApp (tanpa +, contoh: 6281234567890)</label>
-                        <input type="text" name="contact_whatsapp" id="contact_whatsapp" value="{{ setting('contact_whatsapp') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <input type="text" name="contact_whatsapp" id="contact_whatsapp" value="{{ $raw['contact_whatsapp'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                     </div>
                     <div>
                         <label for="contact_address" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-                        <textarea name="contact_address" id="contact_address" rows="2" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">{{ setting('contact_address') }}</textarea>
+                        <textarea name="contact_address" id="contact_address" rows="2" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">{{ $raw['contact_address'] ?? '' }}</textarea>
                     </div>
                     <hr class="my-4">
                     <h4 class="text-sm font-semibold text-gray-700">Social Media</h4>
                     <div>
                         <label for="contact_github" class="block text-sm font-medium text-gray-700 mb-1">GitHub URL</label>
-                        <input type="url" name="contact_github" id="contact_github" value="{{ setting('contact_github') }}" placeholder="https://github.com/username" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <input type="url" name="contact_github" id="contact_github" value="{{ $raw['contact_github'] ?? '' }}" placeholder="https://github.com/username" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                     </div>
                     <div>
                         <label for="contact_linkedin" class="block text-sm font-medium text-gray-700 mb-1">LinkedIn URL</label>
-                        <input type="url" name="contact_linkedin" id="contact_linkedin" value="{{ setting('contact_linkedin') }}" placeholder="https://linkedin.com/in/username" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <input type="url" name="contact_linkedin" id="contact_linkedin" value="{{ $raw['contact_linkedin'] ?? '' }}" placeholder="https://linkedin.com/in/username" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                     </div>
                     <div>
                         <label for="contact_instagram" class="block text-sm font-medium text-gray-700 mb-1">Instagram URL</label>
-                        <input type="url" name="contact_instagram" id="contact_instagram" value="{{ setting('contact_instagram') }}" placeholder="https://instagram.com/username" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <input type="url" name="contact_instagram" id="contact_instagram" value="{{ $raw['contact_instagram'] ?? '' }}" placeholder="https://instagram.com/username" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                     </div>
                 </div>
             </div>
@@ -173,15 +178,15 @@
                 <div class="space-y-4 max-w-2xl">
                     <div>
                         <label for="site_name" class="block text-sm font-medium text-gray-700 mb-1">Nama Website</label>
-                        <input type="text" name="site_name" id="site_name" value="{{ setting('site_name') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <input type="text" name="site_name" id="site_name" value="{{ $raw['site_name'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                     </div>
                     <div>
                         <label for="site_description" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Website (SEO)</label>
-                        <textarea name="site_description" id="site_description" rows="3" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">{{ setting('site_description') }}</textarea>
+                        <textarea name="site_description" id="site_description" rows="3" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">{{ $raw['site_description'] ?? '' }}</textarea>
                     </div>
                     <div>
                         <label for="footer_text" class="block text-sm font-medium text-gray-700 mb-1">Teks Footer</label>
-                        <input type="text" name="footer_text" id="footer_text" value="{{ setting('footer_text') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <input type="text" name="footer_text" id="footer_text" value="{{ $raw['footer_text'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                     </div>
 
                     {{-- 🌐 English Translation --}}
@@ -189,28 +194,28 @@
                         <h4 class="text-sm font-semibold text-blue-700">🌐 English Translation</h4>
                         <div>
                             <label for="en_site_description" class="block text-sm font-medium text-blue-600 mb-1">Website Description / SEO (EN)</label>
-                            <textarea name="en[site_description]" id="en_site_description" rows="3" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="English site description...">{{ \App\Models\Setting::where('key','site_description')->value('value_en') }}</textarea>
+                            <textarea name="en[site_description]" id="en_site_description" rows="3" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="English site description...">{{ $rawEn['site_description'] ?? '' }}</textarea>
                         </div>
                         <div>
                             <label for="en_footer_text" class="block text-sm font-medium text-blue-600 mb-1">Footer Text (EN)</label>
-                            <input type="text" name="en[footer_text]" id="en_footer_text" value="{{ \App\Models\Setting::where('key','footer_text')->value('value_en') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="e.g. All rights reserved.">
+                            <input type="text" name="en[footer_text]" id="en_footer_text" value="{{ $rawEn['footer_text'] ?? '' }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="e.g. All rights reserved.">
                         </div>
                     </div>
 
                     <div>
                         <label for="site_logo" class="block text-sm font-medium text-gray-700 mb-1">Logo Website</label>
-                        @if (setting('site_logo'))
+                        @if ($raw['site_logo'] ?? null)
                         <div class="mb-2">
-                            <img src="{{ asset('storage/' . setting('site_logo')) }}" alt="Logo" class="h-10">
+                            <img src="{{ asset('storage/' . $raw['site_logo']) }}" alt="Logo" class="h-10">
                         </div>
                         @endif
                         <input type="file" name="site_logo" id="site_logo" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                     </div>
                     <div>
                         <label for="site_favicon" class="block text-sm font-medium text-gray-700 mb-1">Favicon</label>
-                        @if (setting('site_favicon'))
+                        @if ($raw['site_favicon'] ?? null)
                         <div class="mb-2">
-                            <img src="{{ asset('storage/' . setting('site_favicon')) }}" alt="Favicon" class="h-8 w-8">
+                            <img src="{{ asset('storage/' . $raw['site_favicon']) }}" alt="Favicon" class="h-8 w-8">
                         </div>
                         @endif
                         <input type="file" name="site_favicon" id="site_favicon" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">

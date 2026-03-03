@@ -35,6 +35,8 @@ class OrderController extends Controller
 
         if ($validated['status'] === 'paid' && !$order->download_token) {
             $order->generateDownloadToken();
+        } elseif ($validated['status'] === 'paid') {
+            $order->update(['status' => 'paid', 'paid_at' => now()]);
         } else {
             $order->update([
                 'status' => $validated['status'],

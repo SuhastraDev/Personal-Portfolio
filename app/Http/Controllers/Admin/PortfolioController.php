@@ -136,6 +136,7 @@ class PortfolioController extends Controller
 
         // Process additional images
         if ($request->hasFile('images')) {
+            $baseOrder = $portfolio->images()->count();
             foreach ($request->file('images') as $index => $file) {
                 $img = Image::read($file);
                 $img->scaleDown(1200);
@@ -144,7 +145,7 @@ class PortfolioController extends Controller
 
                 $portfolio->images()->create([
                     'image_path' => $imgPath,
-                    'order' => $portfolio->images()->count() + $index,
+                    'order' => $baseOrder + $index,
                 ]);
             }
         }
