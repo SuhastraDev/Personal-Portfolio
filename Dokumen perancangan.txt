@@ -1,0 +1,451 @@
+
+DOKUMEN PERANCANGAN SISTEM
+Website Portfolio & Marketplace Source Code
+SuhastraDev
+Framework: Laravel 12 (PHP 8.2+)
+Versi 1.0 (Revisi)
+Dibuat oleh	Indra Jasa Suhastra
+Brand	SuhastraDev
+Tanggal	2025 (Revisi Maret 2026)
+ 
+DAFTAR ISI
+1. Analisis Aktor & Hak Akses
+2. Perancangan Database
+3. Struktur Halaman & Fitur
+4. Kebutuhan Teknis
+5. Keamanan Sistem
+6. SEO & Performa
+ 
+
+1. ANALISIS AKTOR & HAK AKSES
+Bagian ini mendefinisikan siapa saja yang menggunakan sistem SuhastraDev dan apa yang bisa mereka lakukan. Sistem ini memiliki dua aktor utama dengan hak akses yang berbeda.
+
+1.1. Administrator (Indra Jasa Suhastra)
+Administrator adalah pemilik website sekaligus satu-satunya pengguna yang memiliki akses ke panel admin. Berikut adalah seluruh wewenang administrator:
+
+Manajemen Konten Umum
+•	Mengelola konten Hero Section (judul, subjudul, deskripsi, tombol CTA)
+•	Mengelola konten halaman Tentang Saya (bio, foto profil, skill)
+•	Mengelola halaman Layanan (nama layanan, deskripsi, harga, ikon)
+•	Mengelola informasi kontak (email, WhatsApp, social media)
+
+Manajemen Portfolio
+•	Menambah, mengubah, dan menghapus proyek portfolio
+•	Upload thumbnail/screenshot proyek
+•	Mengatur kategori dan tag proyek
+•	Mengatur urutan tampilan proyek
+
+Manajemen Produk Source Code
+•	Menambah, mengubah, dan menghapus produk source code
+•	Upload file source code (ZIP) dan thumbnail produk
+•	Mengatur harga, kategori, dan deskripsi produk
+•	Melihat riwayat pembelian dan data pembeli
+•	Mengatur status produk (aktif/nonaktif)
+•	Mengkonfirmasi order dan mengirim link download via token
+
+Manajemen Pesan & Kontak
+•	Melihat semua pesan masuk dari form kontak
+•	Menandai pesan sebagai sudah dibaca/dibalas
+•	Menghapus pesan
+•	Membalas pesan via WhatsApp langsung dari panel admin
+
+1.2. Pengunjung / Calon Klien (View Only)
+Pengunjung adalah siapa saja yang mengakses website SuhastraDev tanpa login. Berikut hak akses pengunjung:
+•	Melihat seluruh halaman publik (Hero, Tentang, Portfolio, Layanan, Produk)
+•	Melihat detail produk source code
+•	Mencari produk dan portfolio berdasarkan kata kunci, kategori, atau tag
+•	Menghubungi pemilik melalui form kontak atau tombol WhatsApp
+•	Melakukan pembelian produk source code via WhatsApp (konfirmasi manual admin)
+Catatan: Pengunjung tidak memiliki akses ke panel admin dalam kondisi apapun.
+
+ 
+2. PERANCANGAN DATABASE
+Database dirancang menggunakan Laravel Migration. Semua tabel mengikuti konvensi penamaan Laravel (snake_case, plural).
+
+2.1. Tabel Master / Pengguna
+
+Tabel: users
+id              - bigint, PK, auto increment
+name            - string
+email           - string, unique
+email_verified_at - timestamp, nullable
+password        - string
+role            - enum('admin','user'), default 'admin'
+avatar          - string, nullable (path foto profil admin)
+remember_token  - string, nullable
+created_at      - timestamp
+updated_at      - timestamp
+
+Tabel: settings
+id              - bigint, PK, auto increment
+key             - string, unique (contoh: hero_title, about_bio)
+value           - text, nullable
+group           - string (hero, about, contact, general)
+created_at      - timestamp
+updated_at      - timestamp
+
+Definisi Group Settings:
+- hero     → hero_title, hero_subtitle, hero_description, hero_cta_text, hero_cta_url
+- about    → about_name, about_bio, about_photo, about_experience_years, about_projects_count, about_clients_count
+- contact  → contact_email, contact_whatsapp, contact_phone, contact_instagram, contact_github, contact_linkedin, contact_address
+- general  → site_name, site_logo, site_favicon, site_description, footer_text
+
+2.2. Tabel Portfolio
+
+Tabel: portfolio_categories
+id              - bigint, PK, auto increment
+name            - string (Web App, Landing Page, Mobile, dll)
+slug            - string, unique
+created_at      - timestamp
+updated_at      - timestamp
+
+Tabel: portfolios
+id              - bigint, PK, auto increment
+title           - string
+slug            - string, unique
+description     - text
+thumbnail       - string, nullable (path gambar)
+url             - string, nullable (URL demo)
+client_name     - string, nullable (nama klien proyek)
+tech_stack      - text, nullable (JSON array teknologi: ["Laravel","Vue","MySQL"])
+completion_date - date, nullable (tanggal selesai proyek)
+is_featured     - boolean, default false
+order           - integer, default 0
+meta_title      - string, nullable (SEO)
+meta_description - text, nullable (SEO)
+created_at      - timestamp
+updated_at      - timestamp
+
+Tabel: portfolio_images
+id              - bigint, PK, auto increment
+portfolio_id    - bigint, FK → portfolios.id (cascade delete)
+image_path      - string
+order           - integer, default 0
+created_at      - timestamp
+updated_at      - timestamp
+
+Tabel: portfolio_category (Pivot)
+portfolio_id    - bigint, FK → portfolios.id (cascade delete)
+category_id     - bigint, FK → portfolio_categories.id (cascade delete)
+
+2.3. Tabel Produk Source Code
+
+Tabel: product_categories
+id              - bigint, PK, auto increment
+name            - string (Template, Landing Page, Dashboard, Aplikasi)
+slug            - string, unique
+created_at      - timestamp
+updated_at      - timestamp
+
+Tabel: product_tags
+id              - bigint, PK, auto increment
+name            - string (Laravel, React, Vue, TailwindCSS, dll)
+slug            - string, unique
+created_at      - timestamp
+updated_at      - timestamp
+
+Tabel: products
+id              - bigint, PK, auto increment
+title           - string
+slug            - string, unique
+description     - text (deskripsi lengkap produk)
+features        - text, nullable (JSON array fitur: ["Multi Auth","REST API","Dashboard"])
+tech_stack      - text, nullable (JSON array teknologi: ["Laravel 12","Vue 3","MySQL"])
+price           - decimal(12,2) (harga dalam Rupiah)
+thumbnail       - string, nullable (path gambar)
+file_path       - string, nullable (path file ZIP di storage/app/private/products/)
+demo_url        - string, nullable (URL demo live)
+version         - string, nullable (v1.0, v2.0, dll)
+category_id     - bigint, FK → product_categories.id
+is_active       - boolean, default true
+download_count  - integer, default 0
+meta_title      - string, nullable (SEO)
+meta_description - text, nullable (SEO)
+created_at      - timestamp
+updated_at      - timestamp
+
+Tabel: product_images
+id              - bigint, PK, auto increment
+product_id      - bigint, FK → products.id (cascade delete)
+image_path      - string
+order           - integer, default 0
+created_at      - timestamp
+updated_at      - timestamp
+
+Tabel: product_tag (Pivot)
+product_id      - bigint, FK → products.id (cascade delete)
+tag_id          - bigint, FK → product_tags.id (cascade delete)
+
+Tabel: orders
+id              - bigint, PK, auto increment
+order_number    - string, unique (format: INV-YYYYMMDD-XXX)
+buyer_name      - string
+buyer_email     - string
+buyer_phone     - string (nomor WhatsApp)
+product_id      - bigint, FK → products.id
+amount          - decimal(12,2) (nominal pembayaran)
+status          - enum('pending','paid','cancelled'), default 'pending'
+payment_method  - string, nullable (Transfer BCA, Dana, GoPay, dll)
+payment_ref     - string, nullable (nomor referensi pembayaran)
+download_token  - string, nullable, unique (token untuk download aman)
+download_count  - integer, default 0 (hitung berapa kali didownload)
+download_expires_at - timestamp, nullable (batas waktu link download)
+paid_at         - timestamp, nullable (kapan pembayaran dikonfirmasi)
+notes           - text, nullable (catatan admin)
+created_at      - timestamp
+updated_at      - timestamp
+
+2.4. Tabel Layanan & Konten
+
+Tabel: services
+id              - bigint, PK, auto increment
+title           - string (Company Profile, Landing Page, E-Commerce, Maintenance)
+description     - text
+icon            - string (nama ikon atau path SVG)
+price_start     - decimal(12,2) (harga mulai dari)
+price_end       - decimal(12,2), nullable (harga sampai)
+is_active       - boolean, default true
+order           - integer, default 0
+created_at      - timestamp
+updated_at      - timestamp
+
+Tabel: contacts
+id              - bigint, PK, auto increment
+name            - string
+email           - string
+phone           - string, nullable (nomor WhatsApp)
+service_type    - string, nullable (Jenis Kebutuhan: Company Profile, Landing Page, dll)
+subject         - string
+message         - text
+is_read         - boolean, default false
+replied_at      - timestamp, nullable (tandai kapan sudah dibalas)
+created_at      - timestamp
+updated_at      - timestamp
+
+Tabel: skills
+id              - bigint, PK, auto increment
+name            - string (Laravel, PHP, JavaScript, dll)
+icon            - string (nama ikon atau path SVG)
+level           - integer (1-100, persentase kemampuan)
+order           - integer, default 0
+created_at      - timestamp
+updated_at      - timestamp
+
+Tabel: testimonials
+id              - bigint, PK, auto increment
+client_name     - string
+client_role     - string (jabatan/perusahaan klien)
+content         - text (isi testimoni)
+rating          - integer (1-5 bintang)
+is_active       - boolean, default true
+order           - integer, default 0
+created_at      - timestamp
+updated_at      - timestamp
+
+ 
+3. STRUKTUR HALAMAN & FITUR
+
+3.1. Halaman Publik (Frontend)
+Pendekatan: Controller + Blade untuk routing & rendering. Livewire Component hanya untuk bagian interaktif (filter, form).
+
+3.1.1. Hero Section
+•	Nama & tagline utama (dari setting('hero_title'), setting('hero_subtitle'))
+•	Deskripsi singkat (dari setting('hero_description'))
+•	Tombol CTA: Lihat Portfolio & Hubungi Saya
+•	Animasi/visual background menarik (AOS.js / CSS animation)
+
+3.1.2. Tentang Saya
+•	Foto profil (dari setting('about_photo'))
+•	Biografi singkat (dari setting('about_bio'))
+•	Daftar skill dengan level/badge teknologi (dari tabel skills)
+•	Statistik (jumlah proyek, tahun pengalaman, klien puas — dari settings)
+
+3.1.3. Portfolio
+•	Grid proyek dengan filter kategori (Livewire Component)
+•	Thumbnail proyek dengan efek hover
+•	Pagination (12 item per halaman)
+•	Halaman detail per proyek: deskripsi, tech_stack, client_name, link demo
+•	Galeri screenshot proyek (lightbox)
+
+3.1.4. Produk Source Code
+•	Grid katalog produk dengan filter kategori & tag (Livewire Component)
+•	Search bar pencarian produk (Livewire Component)
+•	Pagination (12 item per halaman)
+•	Harga, thumbnail, dan preview produk
+•	Halaman detail produk: deskripsi lengkap, fitur, teknologi, screenshot, demo_url
+•	Tombol beli: redirect ke WhatsApp dengan pesan otomatis berisi nama produk & harga
+•	Badge: Terlaris / Terbaru
+•	Download file hanya via signed URL dengan token (setelah admin konfirmasi order)
+
+3.1.5. Layanan & Harga
+•	Kartu layanan: Company Profile, Landing Page, E-Commerce, Maintenance
+•	Range harga dan estimasi pengerjaan
+•	Tombol CTA per layanan mengarah ke WhatsApp
+
+3.1.6. Form Kontak (Livewire Component)
+•	Form: Nama, Email, No. WhatsApp, Jenis Kebutuhan (dropdown), Subject, Pesan
+•	Real-time validation (Livewire)
+•	Honeypot field untuk anti-spam
+•	Rate limiting: max 3 pesan per IP per jam
+•	Flash message sukses setelah kirim pesan
+•	Tombol WhatsApp langsung
+•	Informasi kontak (email, social media)
+
+3.1.7. Error Pages (Custom)
+•	404 - Halaman Tidak Ditemukan (desain menarik, link kembali ke home)
+•	403 - Akses Ditolak
+•	500 - Server Error
+•	503 - Maintenance Mode
+
+3.2. Panel Admin
+Pendekatan: Controller + Blade tradisional untuk semua CRUD admin. Tidak perlu Livewire di admin panel — CRUD lebih cepat dan sederhana dengan form submit biasa.
+
+3.2.1. Dashboard
+•	Statistik ringkas: total portfolio, total produk aktif, total pesan belum dibaca, total order (pending/paid)
+•	Kartu statistik dengan warna berbeda per kategori
+•	Notifikasi pesan baru yang belum dibaca
+
+3.2.2. Manajemen Konten / Settings
+•	Edit konten Hero (judul, subjudul, deskripsi, CTA)
+•	Edit Tentang Saya (nama, bio, foto profil, statistik)
+•	Edit Kontak & Social Media (email, WhatsApp, Instagram, GitHub, LinkedIn)
+•	Edit General (nama situs, logo, favicon, footer text)
+•	CRUD Skill & level (dengan search & pagination)
+•	CRUD Testimoni klien
+
+3.2.3. Manajemen Portfolio
+•	CRUD proyek portfolio (dengan search & pagination)
+•	Upload thumbnail & galeri gambar
+•	Atur kategori, urutan, status featured, tech_stack, client_name
+•	Validasi file upload: hanya gambar (jpg, png, webp), max 2MB per file
+
+3.2.4. Manajemen Produk
+•	CRUD produk source code (dengan search & pagination)
+•	Upload file ZIP & thumbnail
+•	Validasi: ZIP max 50MB, gambar max 2MB, whitelist ekstensi
+•	Atur harga, kategori, tag, status aktif, features, demo_url, version
+•	Lihat riwayat order per produk
+
+3.2.5. Manajemen Order
+•	Tabel semua order (dengan search, filter status, & pagination)
+•	Detail order: info pembeli, produk, nominal, status, waktu bayar
+•	Update status order: pending → paid → generate download token
+•	Tombol WA untuk follow-up pembeli
+
+3.2.6. Manajemen Layanan
+•	CRUD layanan yang ditawarkan (dengan pagination)
+•	Atur harga, deskripsi, ikon, urutan
+
+3.2.7. Manajemen Pesan
+•	Tabel daftar pesan masuk dari form kontak (dengan search & pagination)
+•	Badge counter pesan belum dibaca di sidebar
+•	Klik pesan → otomatis tandai sudah dibaca
+•	Detail pesan: nama, email, WA, jenis kebutuhan, pesan
+•	Tombol balas via WA
+•	Hapus pesan
+
+ 
+4. KEBUTUHAN TEKNIS
+
+4.1. Stack Teknologi
+Layer           Teknologi                   Keterangan
+Backend         Laravel 12 (PHP 8.2+)       Framework utama aplikasi
+Frontend        Blade + TailwindCSS         Templating & styling
+Interaktif      Livewire 3                  Hanya untuk filter & form kontak di frontend
+Database        MySQL 8.0 / MariaDB         Penyimpanan data utama
+Admin Panel     Controller + Blade          CRUD tradisional (tanpa Livewire)
+File Storage    Laravel Storage (local)     Upload file & gambar ke storage/app
+Auth            Laravel Breeze (Blade)      Autentikasi admin
+Version Control Git + GitHub               Source code management
+
+4.2. Package Laravel yang Dibutuhkan
+•	laravel/breeze — autentikasi admin (pilih variant: Blade)
+•	livewire/livewire — komponen interaktif frontend (filter, form kontak)
+•	intervention/image-laravel — resize & optimasi gambar saat upload
+
+Package opsional (bisa ditambahkan di v2.0):
+•	spatie/laravel-sitemap — generate sitemap XML untuk SEO
+•	spatie/laravel-backup — backup otomatis database & file
+
+Catatan: spatie/laravel-medialibrary TIDAK digunakan karena terlalu kompleks untuk kebutuhan ini. Cukup gunakan Laravel Storage bawaan + Intervention Image.
+
+4.3. Kebutuhan Server
+•	PHP >= 8.2 (ekstensi: pdo_mysql, fileinfo, gd, zip, mbstring)
+•	MySQL >= 8.0 atau MariaDB >= 10.6
+•	Composer >= 2.x
+•	Node.js >= 18 & NPM (untuk build TailwindCSS)
+•	Web server: Apache / Nginx
+•	Storage: minimal 2GB (untuk file source code & gambar)
+
+4.4. Validasi & Form Request
+Setiap form CRUD menggunakan Laravel Form Request terpisah:
+•	StorePortfolioRequest, UpdatePortfolioRequest
+•	StoreProductRequest, UpdateProductRequest
+•	StoreServiceRequest, UpdateServiceRequest
+•	StoreContactRequest (untuk form kontak publik)
+•	UpdateOrderStatusRequest
+•	StoreSkillRequest, UpdateSkillRequest
+•	StoreTestimonialRequest, UpdateTestimonialRequest
+•	UpdateSettingRequest
+
+ 
+5. KEAMANAN SISTEM
+
+5.1. Proteksi Umum
+•	CSRF Protection — otomatis oleh Laravel di semua form (@csrf)
+•	XSS Prevention — gunakan {{ }} (escaped) di semua output Blade, hindari {!! !!} kecuali konten yang memang perlu HTML
+•	SQL Injection — gunakan Eloquent ORM / Query Builder (parameterized query otomatis)
+•	Password Hashing — bcrypt via Hash::make() (default Laravel)
+
+5.2. Proteksi File Upload
+•	Validasi MIME type: hanya image/jpeg, image/png, image/webp untuk gambar
+•	Validasi MIME type: hanya application/zip untuk file source code
+•	Batas ukuran: gambar max 2MB, ZIP max 50MB
+•	Simpan file ZIP di storage/app/private/products/ (TIDAK di public)
+•	Simpan gambar di storage/app/public/ dengan symbolic link
+
+5.3. Proteksi Download Source Code
+•	File ZIP hanya bisa didownload melalui download token unik
+•	Token di-generate saat admin mengkonfirmasi order (status → paid)
+•	Link download memiliki batas waktu (download_expires_at)
+•	Batasi jumlah download per token (max 3x)
+•	Route download menggunakan signed URL Laravel
+
+5.4. Rate Limiting
+•	Form kontak: max 3 request per IP per jam (throttle middleware)
+•	Login admin: max 5 percobaan per menit (sudah default Breeze)
+•	Honeypot field pada form kontak untuk menangkal bot
+
+5.5. Proteksi Route Admin
+•	Middleware auth pada semua route /admin/*
+•	Middleware cek role admin (custom middleware: EnsureIsAdmin)
+•	Redirect ke login jika belum terautentikasi
+•	Redirect ke home jika bukan admin
+
+ 
+6. SEO & PERFORMA
+
+6.1. SEO
+•	Meta title & description dinamis per halaman (dari settings atau per item)
+•	Open Graph tags (og:title, og:description, og:image) untuk sharing social media
+•	Canonical URL pada setiap halaman
+•	Slug URL yang SEO-friendly (portfolios/nama-proyek, products/nama-produk)
+•	Kolom meta_title & meta_description di tabel portfolios dan products
+
+6.2. Performa
+•	Gambar di-resize & compress otomatis saat upload via Intervention Image
+•	Lazy loading gambar di halaman grid (loading="lazy")
+•	Eager loading relasi untuk mencegah N+1 query: Product::with('category', 'tags')->get()
+•	Cache config, route, dan view di production:
+    php artisan config:cache
+    php artisan route:cache
+    php artisan view:cache
+•	Pagination pada semua list (12 item per halaman di frontend, 15 di admin)
+
+6.3. Rencana v2.0 (Setelah Launch)
+•	Integrasi payment gateway (Midtrans/Duitku)
+•	Blog/artikel untuk SEO
+•	Sitemap XML otomatis
+•	Email notification saat ada order/pesan baru
+•	Backup otomatis database & file
+•	Analytics dashboard (Google Analytics / Plausible)

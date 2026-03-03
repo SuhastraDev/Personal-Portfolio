@@ -1,0 +1,418 @@
+
+ROADMAP DEVELOPMENT (REVISI)
+Website Portfolio & Marketplace Source Code
+SuhastraDev
+Timeline: 8 Hari Kerja
+Developer	Indra Jasa Suhastra
+Framework	Laravel 12 + Livewire 3 + TailwindCSS
+Total Hari	8 Hari Kerja (~64 jam)
+ 
+PETUNJUK PENGGUNAAN ROADMAP
+Roadmap ini dirancang agar development SuhastraDev berjalan sistematis dan tidak ada yang terlewat.
+
+Cara Menggunakan Roadmap:
+•	Centang (✓) setiap task yang sudah selesai
+•	Buat commit Git setelah menyelesaikan setiap FASE
+•	Tulis di commit message: "HARI X - FASE Y SELESAI"
+•	Jika berhenti di tengah hari, tandai task terakhir dengan catatan
+
+Cara Melanjutkan Development dengan AI:
+•	Upload roadmap ini + dokumen perancangan sistem
+•	Sebutkan: "Saya sudah menyelesaikan HARI X - FASE Y"
+•	Sebutkan task terakhir yang sudah selesai (nomor dan nama task)
+•	AI akan melanjutkan dari task berikutnya sesuai roadmap
+
+PENTING: Jangan skip atau ubah urutan task. Setiap task bergantung pada task sebelumnya!
+
+PENDEKATAN ARSITEKTUR:
+•	Admin Panel: Controller + Blade tradisional (CRUD form biasa, tanpa Livewire)
+•	Frontend Publik: Controller + Blade untuk routing, Livewire Component HANYA untuk:
+    - Filter portfolio (kategori)
+    - Filter & search produk (kategori, tag, keyword)
+    - Form kontak (real-time validation)
+•	Validasi: Menggunakan Form Request terpisah untuk setiap form
+•	File Upload: Laravel Storage bawaan + Intervention Image (tanpa Spatie Media Library)
+
+OVERVIEW 8 HARI
+Hari	Fokus Utama	Output yang Dihasilkan
+Hari 1	Setup & Database	Project Laravel 12, 15+ tabel database, relasi, seeder
+Hari 2	Auth & Layout Dasar	Login admin, layout frontend & admin, navigasi, error pages
+Hari 3	Manajemen Konten & Portfolio	CRUD portfolio, manajemen konten dinamis (settings)
+Hari 4	Manajemen Produk Source Code	CRUD produk, upload file, kategori, tag, halaman detail
+Hari 5	Manajemen Layanan & Kontak	CRUD layanan, form kontak, inbox pesan di admin
+Hari 6	Frontend Public Pages	Semua halaman publik yang terkoneksi ke database
+Hari 7	Security, SEO & Polish	Keamanan, SEO meta, animasi, responsif
+Hari 8	Testing & Deploy	Bug fix, testing menyeluruh, deploy ke hosting
+
+========================================================================
+HARI 1: SETUP PROJECT & DATABASE
+========================================================================
+Target: Project Laravel 12 terinstall, database lengkap dengan semua tabel dan relasi, data dummy tersedia
+Estimasi Waktu: 7-8 jam
+
+FASE 1.1: Setup Environment & Install Laravel (1 jam)
+☐  1.1.1 - Install/pastikan PHP >= 8.2, Composer, MySQL, Node.js >= 18
+☐  1.1.2 - composer create-project laravel/laravel SuhastraDev
+☐  1.1.3 - Konfigurasi .env (database, APP_NAME=SuhastraDev, APP_URL=http://localhost:8000)
+☐  1.1.4 - Buat database: CREATE DATABASE suhastra_dev;
+☐  1.1.5 - composer require livewire/livewire intervention/image-laravel
+☐  1.1.6 - npm install && npm run build (TailwindCSS)
+☐  1.1.7 - git init && git add . && git commit -m 'HARI 1 - FASE 1.1 SELESAI'
+
+⚠ Pastikan ekstensi PHP aktif: pdo_mysql, fileinfo, gd, zip, mbstring
+⚠ TIDAK pakai spatie/laravel-medialibrary — cukup Storage + Intervention Image
+
+FASE 1.2: Migration Tabel Master (0.5 jam)
+☐  1.2.1 - Migration: users (tambah kolom role enum('admin','user'), avatar nullable)
+☐  1.2.2 - Migration: settings (key unique, value text, group string)
+☐  1.2.3 - Migration: skills (name, icon, level integer, order integer)
+☐  1.2.4 - Migration: testimonials (client_name, client_role, content, rating integer, is_active boolean, order integer)
+
+FASE 1.3: Migration Tabel Portfolio (0.5 jam)
+☐  1.3.1 - Migration: portfolio_categories (name, slug unique)
+☐  1.3.2 - Migration: portfolios (title, slug unique, description text, thumbnail, url nullable, client_name nullable, tech_stack text nullable, completion_date date nullable, is_featured boolean, order integer, meta_title nullable, meta_description text nullable)
+☐  1.3.3 - Migration: portfolio_images (portfolio_id FK cascade, image_path, order integer)
+☐  1.3.4 - Migration: portfolio_category pivot (portfolio_id FK cascade, category_id FK cascade)
+
+FASE 1.4: Migration Tabel Produk (1 jam)
+☐  1.4.1 - Migration: product_categories (name, slug unique)
+☐  1.4.2 - Migration: product_tags (name, slug unique)
+☐  1.4.3 - Migration: products (title, slug unique, description text, features text nullable, tech_stack text nullable, price decimal(12,2), thumbnail, file_path nullable, demo_url nullable, version nullable, category_id FK, is_active boolean, download_count integer default 0, meta_title nullable, meta_description text nullable)
+☐  1.4.4 - Migration: product_images (product_id FK cascade, image_path, order integer)
+☐  1.4.5 - Migration: product_tag pivot (product_id FK cascade, tag_id FK cascade)
+☐  1.4.6 - Migration: orders (order_number unique, buyer_name, buyer_email, buyer_phone, product_id FK, amount decimal(12,2), status enum('pending','paid','cancelled'), payment_method nullable, payment_ref nullable, download_token nullable unique, download_count integer default 0, download_expires_at nullable, paid_at nullable, notes text nullable)
+
+FASE 1.5: Migration Tabel Layanan & Kontak (0.5 jam)
+☐  1.5.1 - Migration: services (title, description text, icon, price_start decimal(12,2), price_end decimal(12,2) nullable, is_active boolean, order integer)
+☐  1.5.2 - Migration: contacts (name, email, phone nullable, service_type nullable, subject, message text, is_read boolean default false, replied_at nullable)
+
+FASE 1.6: Buat Models & Relasi (1.5 jam)
+☐  1.6.1 - Model: User (tambah fillable: role, avatar)
+☐  1.6.2 - Model: Setting (fillable: key, value, group)
+☐  1.6.3 - Model: Skill (fillable: name, icon, level, order)
+☐  1.6.4 - Model: Testimonial (fillable: client_name, client_role, content, rating, is_active, order)
+☐  1.6.5 - Model: PortfolioCategory (relasi: belongsToMany → Portfolio)
+☐  1.6.6 - Model: Portfolio (relasi: belongsToMany → PortfolioCategory, hasMany → PortfolioImage)
+☐  1.6.7 - Model: PortfolioImage (relasi: belongsTo → Portfolio)
+☐  1.6.8 - Model: ProductCategory (relasi: hasMany → Product)
+☐  1.6.9 - Model: ProductTag (relasi: belongsToMany → Product)
+☐  1.6.10 - Model: Product (relasi: belongsTo → ProductCategory, belongsToMany → ProductTag, hasMany → ProductImage, hasMany → Order)
+☐  1.6.11 - Model: ProductImage (relasi: belongsTo → Product)
+☐  1.6.12 - Model: Order (relasi: belongsTo → Product)
+☐  1.6.13 - Model: Service (fillable semua kolom)
+☐  1.6.14 - Model: Contact (fillable semua kolom)
+☐  1.6.15 - Helper function: setting('key') di app/Helpers/helpers.php + autoload di composer.json
+
+FASE 1.7: Seeder & Data Dummy (1 jam)
+☐  1.7.1 - Seeder: AdminSeeder (1 akun admin: admin@suhastradev.com / password)
+☐  1.7.2 - Seeder: SettingSeeder (data konten default untuk semua group: hero, about, contact, general)
+☐  1.7.3 - Seeder: SkillSeeder (5 skill default: PHP, Laravel, JavaScript, TailwindCSS, MySQL)
+☐  1.7.4 - Seeder: PortfolioCategorySeeder + PortfolioSeeder (3 dummy proyek dengan tech_stack & client_name)
+☐  1.7.5 - Seeder: ProductCategorySeeder + ProductTagSeeder + ProductSeeder (3 dummy produk dengan features & demo_url)
+☐  1.7.6 - Seeder: ServiceSeeder (4 layanan default: Company Profile, Landing Page, E-Commerce, Maintenance)
+☐  1.7.7 - Seeder: TestimonialSeeder (3 dummy testimoni)
+☐  1.7.8 - Daftarkan semua seeder di DatabaseSeeder.php
+☐  1.7.9 - php artisan migrate:fresh --seed
+☐  1.7.10 - git commit -m 'HARI 1 - FASE 1.7 SELESAI - Database Lengkap'
+
+========================================================================
+HARI 2: AUTENTIKASI & LAYOUT DASAR
+========================================================================
+Target: Login/logout admin berfungsi, layout dasar frontend dan admin panel siap, error pages custom
+Estimasi Waktu: 7-8 jam
+
+FASE 2.1: Setup Auth Admin (1.5 jam)
+☐  2.1.1 - composer require laravel/breeze --dev
+☐  2.1.2 - php artisan breeze:install blade (pilih variant Blade, bukan Livewire)
+☐  2.1.3 - npm install && npm run build
+☐  2.1.4 - Kustomisasi halaman login (desain SuhastraDev, hapus link register)
+☐  2.1.5 - Hapus/disable route register publik (hanya admin yang bisa login)
+☐  2.1.6 - Buat middleware: EnsureIsAdmin (cek user->role === 'admin')
+☐  2.1.7 - Daftarkan middleware di bootstrap/app.php
+☐  2.1.8 - Route group: Route::prefix('admin')->middleware(['auth', 'admin'])
+☐  2.1.9 - Test login dengan akun admin seeder
+
+FASE 2.2: Layout Admin Panel (2 jam)
+☐  2.2.1 - Buat layout: resources/views/layouts/admin.blade.php
+☐  2.2.2 - Sidebar navigasi admin:
+           - Dashboard
+           - Konten (Settings, Skills, Testimoni)
+           - Portfolio (List, Kategori)
+           - Produk (List, Kategori, Tag)
+           - Order
+           - Layanan
+           - Pesan (dengan badge counter unread)
+☐  2.2.3 - Header admin (nama user, avatar, tombol logout)
+☐  2.2.4 - Flash message component (success, error, warning)
+☐  2.2.5 - Halaman Dashboard admin (placeholder statistik dengan card)
+☐  2.2.6 - Pastikan layout responsif (sidebar collapse di tablet/mobile)
+
+FASE 2.3: Layout Frontend Publik (2 jam)
+☐  2.3.1 - Buat layout: resources/views/layouts/app.blade.php
+☐  2.3.2 - Navbar publik (logo SuhastraDev, menu: Home, About, Portfolio, Produk, Layanan, Kontak, tombol Hubungi)
+☐  2.3.3 - Footer (kontak singkat, social media, copyright © SuhastraDev)
+☐  2.3.4 - Desain warna & font SuhastraDev di tailwind.config.js (primary color, font family)
+☐  2.3.5 - Halaman placeholder untuk tiap section
+
+FASE 2.4: Custom Error Pages & Route Setup (1 jam)
+☐  2.4.1 - Custom 404 page: resources/views/errors/404.blade.php (desain menarik + link home)
+☐  2.4.2 - Custom 403 page: resources/views/errors/403.blade.php
+☐  2.4.3 - Custom 500 page: resources/views/errors/500.blade.php
+☐  2.4.4 - Setup route publik: home, portfolio, produk, layanan, kontak
+☐  2.4.5 - Setup route admin: dashboard, settings, skills, testimonials, portfolios, products, orders, services, contacts
+☐  2.4.6 - git commit -m 'HARI 2 SELESAI - Auth & Layout'
+
+========================================================================
+HARI 3: MANAJEMEN KONTEN & PORTFOLIO
+========================================================================
+Target: Admin bisa edit semua konten halaman + CRUD portfolio lengkap
+Estimasi Waktu: 7-8 jam
+
+FASE 3.1: Manajemen Konten Dinamis / Settings (2 jam)
+☐  3.1.1 - Buat Form Request: UpdateSettingRequest
+☐  3.1.2 - Buat SettingController + halaman admin/settings/index.blade.php
+☐  3.1.3 - Tab/section: Hero, About, Contact, General
+☐  3.1.4 - Form edit Hero Section (hero_title, hero_subtitle, hero_description, hero_cta_text, hero_cta_url)
+☐  3.1.5 - Form edit Tentang Saya (about_name, about_bio, about_photo upload, about_experience_years, about_projects_count, about_clients_count)
+☐  3.1.6 - Form edit Kontak & Social Media (contact_email, contact_whatsapp, contact_instagram, contact_github, contact_linkedin, contact_address)
+☐  3.1.7 - Form edit General (site_name, site_logo upload, site_favicon upload, site_description, footer_text)
+☐  3.1.8 - Flash message sukses setelah update
+
+FASE 3.2: CRUD Skill (1 jam)
+☐  3.2.1 - Buat Form Request: StoreSkillRequest, UpdateSkillRequest
+☐  3.2.2 - Buat SkillController (index, create, store, edit, update, destroy)
+☐  3.2.3 - Halaman admin/skills/index.blade.php (tabel list + pagination + search)
+☐  3.2.4 - Form tambah & edit skill (nama, ikon, level 1-100)
+☐  3.2.5 - Input order untuk urutan tampilan
+☐  3.2.6 - Konfirmasi hapus skill
+
+FASE 3.3: CRUD Testimoni (1 jam)
+☐  3.3.1 - Buat Form Request: StoreTestimonialRequest, UpdateTestimonialRequest
+☐  3.3.2 - Buat TestimonialController (CRUD lengkap)
+☐  3.3.3 - Halaman admin/testimonials/index.blade.php (tabel + pagination)
+☐  3.3.4 - Form tambah & edit testimoni (nama klien, jabatan, isi, rating 1-5, toggle aktif)
+☐  3.3.5 - Toggle is_active dari tabel list
+
+FASE 3.4: CRUD Portfolio (2.5 jam)
+☐  3.4.1 - Buat Form Request: StorePortfolioRequest, UpdatePortfolioRequest
+☐  3.4.2 - Buat PortfolioController (CRUD lengkap)
+☐  3.4.3 - Buat PortfolioCategoryController (CRUD sederhana)
+☐  3.4.4 - Halaman admin/portfolio-categories/index.blade.php (CRUD inline)
+☐  3.4.5 - Halaman admin/portfolios/index.blade.php (tabel/grid + search + pagination)
+☐  3.4.6 - Form tambah portfolio:
+           - Judul, slug auto-generate, deskripsi (textarea)
+           - Thumbnail upload (validasi: jpg/png/webp, max 2MB)
+           - URL demo, client_name, tech_stack, completion_date
+           - Multi-select kategori (checkbox)
+           - Meta title & meta description (SEO)
+☐  3.4.7 - Upload multiple gambar galeri per proyek (max 10 gambar)
+☐  3.4.8 - Fitur toggle is_featured dan input urutan
+☐  3.4.9 - Halaman edit portfolio (pre-fill data, replace/hapus gambar)
+☐  3.4.10 - Konfirmasi hapus portfolio + hapus file terkait dari storage
+☐  3.4.11 - git commit -m 'HARI 3 SELESAI - Konten & Portfolio'
+
+========================================================================
+HARI 4: MANAJEMEN PRODUK SOURCE CODE
+========================================================================
+Target: CRUD produk lengkap, upload file ZIP & gambar, manajemen order
+Estimasi Waktu: 7-8 jam
+
+FASE 4.1: CRUD Kategori & Tag Produk (1 jam)
+☐  4.1.1 - Buat ProductCategoryController (CRUD sederhana)
+☐  4.1.2 - Halaman admin/product-categories/index.blade.php (tabel + form inline)
+☐  4.1.3 - Buat ProductTagController (CRUD sederhana)
+☐  4.1.4 - Halaman admin/product-tags/index.blade.php (tabel + form inline)
+
+FASE 4.2: CRUD Produk (3 jam)
+☐  4.2.1 - Buat Form Request: StoreProductRequest, UpdateProductRequest
+           Validasi: title required, slug unique, price numeric min:0, thumbnail image max:2048kb, file_path mimes:zip max:51200kb
+☐  4.2.2 - Buat ProductController (CRUD lengkap)
+☐  4.2.3 - Halaman admin/products/index.blade.php (tabel produk + search + filter kategori + pagination)
+☐  4.2.4 - Form tambah produk:
+           - Judul, slug auto-generate, deskripsi lengkap (textarea)
+           - Harga (Rupiah), kategori (select), tag multi-select (checkbox)
+           - Features (textarea, JSON array), tech_stack, version, demo_url
+           - Upload thumbnail (validasi: jpg/png/webp, max 2MB)
+           - Upload file ZIP source code (validasi: zip only, max 50MB, simpan di storage/app/private/products/)
+           - Upload multiple screenshot/preview (max 10 gambar, max 2MB per gambar)
+           - Toggle status aktif/nonaktif
+           - Meta title & meta description (SEO)
+☐  4.2.5 - Halaman edit produk (pre-fill semua data, replace file/gambar)
+☐  4.2.6 - Hapus produk + hapus semua file terkait dari storage
+
+FASE 4.3: Manajemen Order & Transaksi (2 jam)
+☐  4.3.1 - Buat OrderController (index, show, updateStatus)
+☐  4.3.2 - Buat Form Request: UpdateOrderStatusRequest
+☐  4.3.3 - Halaman admin/orders/index.blade.php (tabel semua order + search + filter status + pagination)
+☐  4.3.4 - Halaman detail order (info pembeli, produk, nominal, status, timestamps)
+☐  4.3.5 - Update status order:
+           - pending → paid: generate download_token (Str::random(64)), set paid_at, set download_expires_at (+7 hari)
+           - paid → cancelled: hapus download_token
+☐  4.3.6 - Tombol WA untuk follow-up pembeli (wa.me/nomor?text=pesan otomatis)
+☐  4.3.7 - git commit -m 'HARI 4 SELESAI - Manajemen Produk'
+
+========================================================================
+HARI 5: LAYANAN & MANAJEMEN PESAN
+========================================================================
+Target: CRUD layanan selesai + inbox pesan kontak berfungsi penuh + dashboard update
+Estimasi Waktu: 6-7 jam
+
+FASE 5.1: CRUD Layanan (2 jam)
+☐  5.1.1 - Buat Form Request: StoreServiceRequest, UpdateServiceRequest
+☐  5.1.2 - Buat ServiceController (CRUD lengkap)
+☐  5.1.3 - Halaman admin/services/index.blade.php (tabel layanan + toggle aktif + pagination)
+☐  5.1.4 - Form tambah layanan (judul, deskripsi, ikon, harga awal-akhir, urutan)
+☐  5.1.5 - Halaman edit layanan (pre-fill data)
+☐  5.1.6 - Hapus layanan dengan konfirmasi
+
+FASE 5.2: Manajemen Pesan Kontak (2 jam)
+☐  5.2.1 - Buat ContactController (index, show, markAsRead, destroy)
+☐  5.2.2 - Halaman admin/contacts/index.blade.php (tabel pesan masuk + search + pagination)
+☐  5.2.3 - Badge/counter pesan belum dibaca di sidebar admin (View Composer atau share variable)
+☐  5.2.4 - Klik pesan → otomatis tandai sudah dibaca (is_read = true)
+☐  5.2.5 - Halaman detail pesan (nama, email, no WA, jenis kebutuhan, subject, pesan lengkap, tanggal)
+☐  5.2.6 - Tombol balas via WA langsung dari halaman pesan (wa.me/nomor pembeli)
+☐  5.2.7 - Hapus pesan dengan konfirmasi
+
+FASE 5.3: Dashboard Admin Update (1.5 jam)
+☐  5.3.1 - Update DashboardController: hitung total portfolio, produk aktif, pesan belum dibaca, total order, order pending, order paid
+☐  5.3.2 - Kartu statistik dengan warna & ikon berbeda per kategori
+☐  5.3.3 - List 5 pesan terbaru di dashboard
+☐  5.3.4 - List 5 order terbaru di dashboard
+☐  5.3.5 - git commit -m 'HARI 5 SELESAI - Layanan & Pesan'
+
+========================================================================
+HARI 6: FRONTEND PUBLIK
+========================================================================
+Target: Semua halaman publik yang tampil ke pengunjung, terkoneksi ke database
+Estimasi Waktu: 8 jam
+
+FASE 6.1: Hero & About Section (1.5 jam)
+☐  6.1.1 - Buat HomeController (ambil data dari settings, skills, portfolios featured, products terbaru, services, testimonials)
+☐  6.1.2 - Hero section: judul, subjudul, CTA dari setting('hero_*'), animasi CSS
+☐  6.1.3 - About section: foto profil, bio, skill grid, statistik dari database
+☐  6.1.4 - Desain profesional & menarik sesuai identitas SuhastraDev
+
+FASE 6.2: Halaman Portfolio (1.5 jam)
+☐  6.2.1 - Buat Livewire Component: PortfolioFilter (filter kategori + pagination)
+☐  6.2.2 - Grid portfolio: card dengan thumbnail, judul, kategori badge, hover effect
+☐  6.2.3 - Pagination (12 item per halaman)
+☐  6.2.4 - Buat PortfolioController@show untuk detail
+☐  6.2.5 - Halaman detail portfolio: deskripsi, tech_stack, client_name, galeri gambar (lightbox), link demo
+
+FASE 6.3: Halaman Produk Source Code (2 jam)
+☐  6.3.1 - Buat Livewire Component: ProductFilter (filter kategori, tag, search keyword + pagination)
+☐  6.3.2 - Grid katalog produk: card dengan thumbnail, judul, harga format Rupiah, badge (Terbaru)
+☐  6.3.3 - Pagination (12 item per halaman)
+☐  6.3.4 - Halaman detail produk: deskripsi lengkap, fitur list, teknologi, screenshot galeri, demo_url, version
+☐  6.3.5 - Tombol Beli: redirect ke WhatsApp dengan pesan otomatis:
+           "Halo SuhastraDev, saya ingin membeli [Nama Produk] (Rp [Harga]). Mohon info pembayaran."
+☐  6.3.6 - Route download file: /download/{token}
+           - Cek token valid, belum expired, download count < 3
+           - Increment download_count pada order DAN product
+           - Return file dari storage/app/private/products/
+
+FASE 6.4: Halaman Layanan, Testimoni & Kontak (2 jam)
+☐  6.4.1 - Section layanan: kartu layanan dari database, harga format Rupiah, tombol WA per layanan
+☐  6.4.2 - Section testimoni: carousel/grid dari database (hanya is_active = true)
+☐  6.4.3 - Buat Livewire Component: ContactForm
+           - Fields: nama, email, no WA, jenis kebutuhan (dropdown), subject, pesan
+           - Real-time validation
+           - Honeypot hidden field untuk anti-bot
+           - Submit → simpan ke tabel contacts → flash message sukses → reset form
+☐  6.4.4 - Info kontak: email, WA, social media dari settings
+☐  6.4.5 - git commit -m 'HARI 6 SELESAI - Frontend Publik'
+
+========================================================================
+HARI 7: SECURITY, SEO & POLISH
+========================================================================
+Target: Website aman, SEO-ready, responsif, dan visual menarik
+Estimasi Waktu: 7-8 jam
+
+FASE 7.1: Keamanan (2 jam)
+☐  7.1.1 - Tambah rate limiting di form kontak: throttle:3,60 (3 request per IP per jam)
+☐  7.1.2 - Pastikan semua form punya @csrf
+☐  7.1.3 - Pastikan semua output user menggunakan {{ }} (escaped), bukan {!! !!}
+☐  7.1.4 - Validasi file upload ketat di semua Form Request (mimes, max size)
+☐  7.1.5 - Pastikan file ZIP di storage/app/private/ (bukan public)
+☐  7.1.6 - Review signed URL download: cek token, expiry, max download count
+☐  7.1.7 - Pastikan middleware admin di semua route /admin/*
+☐  7.1.8 - Tambah honeypot field di form kontak (validasi: field harus kosong)
+
+FASE 7.2: SEO & Meta Tags (1.5 jam)
+☐  7.2.1 - Dynamic meta tags di layout app.blade.php (@yield('meta_title'), @yield('meta_description'))
+☐  7.2.2 - Open Graph tags (og:title, og:description, og:image) di setiap halaman
+☐  7.2.3 - Canonical URL di setiap halaman
+☐  7.2.4 - Set meta title & description dari database untuk halaman detail portfolio & produk
+☐  7.2.5 - Favicon dari settings
+
+FASE 7.3: UI Polish & Animasi (2.5 jam)
+☐  7.3.1 - Pastikan semua halaman responsif di mobile (375px), tablet (768px), desktop (1024px+)
+☐  7.3.2 - Tambah animasi scroll reveal (AOS.js: npm install aos)
+☐  7.3.3 - Smooth scrolling antar section di homepage
+☐  7.3.4 - Active state navbar sesuai halaman/section aktif
+☐  7.3.5 - Loading state pada form kontak & tombol beli
+☐  7.3.6 - Hover effects pada card portfolio & produk
+
+FASE 7.4: Optimasi Performa (1.5 jam)
+☐  7.4.1 - Optimasi gambar: resize & compress saat upload via Intervention Image
+☐  7.4.2 - Lazy loading gambar di halaman portfolio & produk (loading="lazy")
+☐  7.4.3 - Pastikan tidak ada N+1 query — gunakan eager loading: with('category', 'tags', 'images')
+☐  7.4.4 - Optimasi query dashboard (gunakan DB::raw count atau withCount)
+☐  7.4.5 - git commit -m 'HARI 7 SELESAI - Security, SEO & Polish'
+
+========================================================================
+HARI 8: TESTING & DEPLOY
+========================================================================
+Target: Website siap tayang — bug-free, tested, dan live di hosting
+Estimasi Waktu: 7-8 jam
+
+FASE 8.1: Testing Menyeluruh (3.5 jam)
+☐  8.1.1 - Test login/logout admin + proteksi route admin (akses tanpa login → redirect)
+☐  8.1.2 - Test CRUD Settings (semua group: hero, about, contact, general)
+☐  8.1.3 - Test CRUD Skill (tambah, edit, hapus, urutan)
+☐  8.1.4 - Test CRUD Testimoni (tambah, edit, hapus, toggle aktif)
+☐  8.1.5 - Test CRUD Portfolio + kategori (tambah, edit, hapus, upload gambar, multi-kategori)
+☐  8.1.6 - Test CRUD Produk + kategori + tag (tambah, edit, hapus, upload ZIP & gambar)
+☐  8.1.7 - Test upload file: gambar > 2MB harus ditolak, ZIP > 50MB harus ditolak, file non-ZIP harus ditolak
+☐  8.1.8 - Test CRUD Layanan (tambah, edit, hapus, toggle aktif)
+☐  8.1.9 - Test form kontak: input valid → pesan tersimpan, input kosong → error, spam → rate limited
+☐  8.1.10 - Test order: update status → generate token, test download link, test expired token
+☐  8.1.11 - Test tombol WA di produk, layanan, dan pesan
+☐  8.1.12 - Test pagination & search di admin (semua halaman list)
+☐  8.1.13 - Test halaman 404 (akses URL random)
+☐  8.1.14 - Test di mobile via Chrome DevTools responsive mode
+☐  8.1.15 - Cek semua link tidak ada yang broken/404
+
+FASE 8.2: Bug Fix & Final Polish (1.5 jam)
+☐  8.2.1 - Fix semua bug yang ditemukan saat testing
+☐  8.2.2 - Review semua flash message (sukses/error) muncul dengan benar
+☐  8.2.3 - Pastikan semua gambar placeholder tampil jika belum ada gambar
+☐  8.2.4 - Final review desain & konsistensi UI
+
+FASE 8.3: Deploy ke Hosting (2.5 jam)
+☐  8.3.1 - Upload project ke hosting (shared hosting / VPS)
+☐  8.3.2 - Konfigurasi .env production:
+           APP_ENV=production
+           APP_DEBUG=false
+           APP_URL=https://domain.com
+☐  8.3.3 - php artisan migrate --force di server
+☐  8.3.4 - php artisan db:seed --force (data awal)
+☐  8.3.5 - php artisan storage:link (symbolic link untuk file publik)
+☐  8.3.6 - php artisan config:cache && route:cache && view:cache
+☐  8.3.7 - Konfigurasi SSL (HTTPS) — gratis via Let's Encrypt
+☐  8.3.8 - Set permission: chmod -R 755 storage bootstrap/cache
+☐  8.3.9 - Test website live di domain asli (semua fitur)
+☐  8.3.10 - git commit -m 'HARI 8 - DEPLOY SELESAI - SuhastraDev LIVE!'
+
+========================================================================
+⚠ Selamat! SuhastraDev v1.0 sudah live dan siap menerima klien!
+========================================================================
+
+RENCANA v2.0 (Setelah Launch):
+•	Integrasi payment gateway (Midtrans/Duitku)
+•	Blog/artikel untuk SEO
+•	Sitemap XML otomatis (spatie/laravel-sitemap)
+•	Email notification saat ada order/pesan baru
+•	Backup otomatis (spatie/laravel-backup)
+•	Analytics dashboard

@@ -1,0 +1,40 @@
+@extends('layouts.admin')
+
+@section('title', 'Tambah Tag Produk')
+
+@section('content')
+<div class="mb-6">
+    <a href="{{ route('admin.product-tags.index') }}" class="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-2">
+        <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        </svg>
+        Kembali ke Tag
+    </a>
+    <h1 class="text-2xl font-bold text-gray-900">Tambah Tag Produk</h1>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 max-w-xl">
+    <form action="{{ route('admin.product-tags.store') }}" method="POST">
+        @csrf
+        <div class="p-6 space-y-4">
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Tag <span class="text-red-500">*</span></label>
+                <input type="text" name="name" id="name" value="{{ old('name') }}" required class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm" placeholder="contoh: Laravel, Vue.js">
+                @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            </div>
+
+            <div>
+                <label for="slug" class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
+                <input type="text" name="slug" id="slug" value="{{ old('slug') }}" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm font-mono" placeholder="otomatis dari nama">
+                <p class="text-xs text-gray-400 mt-1">Kosongkan untuk generate otomatis dari nama.</p>
+                @error('slug') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            </div>
+        </div>
+
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-xl flex justify-end gap-3">
+            <a href="{{ route('admin.product-tags.index') }}" class="px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Batal</a>
+            <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">Simpan Tag</button>
+        </div>
+    </form>
+</div>
+@endsection
