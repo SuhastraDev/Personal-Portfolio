@@ -29,7 +29,7 @@
 
             {{-- Sidebar --}}
             <div :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-                class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-auto lg:z-auto lg:shrink-0 flex flex-col">
+                class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-auto lg:z-auto lg:shrink-0 lg:h-screen flex flex-col">
 
                 {{-- Logo --}}
                 <div class="flex h-16 items-center justify-between px-6 bg-gray-950 shrink-0">

@@ -2,8 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Mail\ContactFormMail;
 use App\Models\Contact;
 use App\Models\Service;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
 
@@ -64,8 +66,16 @@ class ContactForm extends Component
         $validated = $this->validate();
 
         try {
-            Contact::create($validated);
+            $contact = Contact::create($validated);
             RateLimiter::hit($key, 3600); // 1 hour decay
+
+            // Forward pesan ke email admin
+            try {
+                Mail::to('indrajayabta414@gmail.com')->send(new ContactFormMail($contact));
+            } catch (\Exception $e) {
+                // Email gagal tapi pesan tetap tersimpan di database
+                \Illuminate\Support\Facades\Log::warning('Contact email forwarding failed: ' . $e->getMessage());
+            }
 
             $this->reset(['name', 'email', 'phone', 'service_type', 'subject', 'message', 'rateLimitError']);
             $this->submitted = true;
