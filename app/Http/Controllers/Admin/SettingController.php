@@ -122,11 +122,9 @@ class SettingController extends Controller
             );
         }
 
+        // English translations: only update existing rows, don't create new ones
         foreach ($en as $key => $value) {
-            Setting::updateOrCreate(
-                ['key' => $key],
-                ['value_en' => $value ?? '', 'group' => $groupMap[$key] ?? 'general']
-            );
+            Setting::where('key', $key)->update(['value_en' => $value ?? '']);
         }
 
         clear_setting_cache();
