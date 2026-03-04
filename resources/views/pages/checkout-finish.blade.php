@@ -1,7 +1,7 @@
 ﻿@extends('layouts.app')
 
 @section('title', __('Status Pesanan'))
-@section('meta_title', __('Status Pesanan') . ' â€” ' . $order->order_number)
+@section('meta_title', __('Status Pesanan') . ' — ' . $order->order_number)
 
 @section('content')
 <section class="bg-gradient-to-br from-dark-950 via-dark-900 to-primary-950 pt-32 pb-20 relative overflow-hidden">
@@ -125,7 +125,7 @@
                     <div class="mt-3 flex items-start gap-2 p-3 bg-amber-50 rounded-lg">
                         <i class="fa-solid fa-triangle-exclamation text-amber-500 text-xs mt-0.5"></i>
                         <p class="text-xs text-amber-700">
-                            {{ __('Download tersisa:') }} <strong>{{ 2 - $order->download_count }}x</strong> â€¢
+                            {{ __('Download tersisa:') }} <strong>{{ 2 - $order->download_count }}x</strong> •
                             {{ __('Berlaku hingga:') }} <strong>{{ $order->download_expires_at ? $order->download_expires_at->format('d M Y, H:i') . ' WIB' : '-' }}</strong>
                         </p>
                     </div>

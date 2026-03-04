@@ -16,8 +16,10 @@ if (!function_exists('setting')) {
         $locale = app()->getLocale();
         $cacheKey = "setting_{$key}_{$locale}";
 
-        return Cache::rememberForever($cacheKey, function () use ($key, $default) {
-            return Setting::getValue($key, $default);
+        // Use 1-hour TTL instead of forever to avoid stale null values
+        return Cache::remember($cacheKey, 3600, function () use ($key, $default) {
+            $value = Setting::getValue($key, $default);
+            return $value;
         });
     }
 }

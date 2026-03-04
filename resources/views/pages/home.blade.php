@@ -63,7 +63,7 @@
                     class="group inline-flex items-center px-7 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-2xl transition-all duration-300 backdrop-blur-md border border-white/20 hover:border-white/30 hover:-translate-y-1 hover:shadow-lg">
                     <i class="fa-solid fa-paper-plane mr-2.5 group-hover:rotate-12 transition-transform duration-300"></i>
                     {{ __('Hubungi Saya') }}
-                </a>}
+                </a>
                 <div class="mt-12 flex flex-wrap items-center gap-3" data-aos="fade-up" data-aos-delay="400" data-aos-duration="700">
                     <span class="text-dark-500 text-xs uppercase tracking-wider font-medium">{{ __('Tech:') }}</span>
                     @php $techIcons = ['fa-brands fa-laravel' => 'Laravel', 'fa-brands fa-vuejs' => 'Vue.js', 'fa-brands fa-php' => 'PHP', 'fa-brands fa-js' => 'JavaScript']; @endphp
@@ -83,6 +83,7 @@
                 <div class="w-1 h-2.5 bg-white/50 rounded-full animate-bounce"></div>
             </div>
         </div>
+    </div>
 </section>
 
 {{-- Stats --}}
@@ -244,7 +245,7 @@
                 <p class="text-sm font-bold text-primary-600">
                     Rp {{ number_format($service->price_start, 0, ',', '.') }}
                     @if($service->price_end)
-                    â€” Rp {{ number_format($service->price_end, 0, ',', '.') }}
+                    — Rp {{ number_format($service->price_end, 0, ',', '.') }}
                     @else
                     ~
                     @endif

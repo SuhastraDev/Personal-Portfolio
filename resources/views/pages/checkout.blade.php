@@ -209,6 +209,12 @@
             async submitCheckout() {
                 if (!this.validate()) return;
 
+                // Check if Midtrans Snap.js is loaded
+                if (typeof window.snap === 'undefined' || !window.snap) {
+                    this.errorMessage = @js(__('Sistem pembayaran sedang dimuat. Tunggu beberapa detik lalu coba lagi.'));
+                    return;
+                }
+
                 this.loading = true;
                 this.errorMessage = '';
 
@@ -223,10 +229,19 @@
                         body: JSON.stringify(this.form),
                     });
 
-                    const data = await response.json();
+                    let data;
+                    try {
+                        data = await response.json();
+                    } catch (parseError) {
+                        this.errorMessage = @js(__('Respon server tidak valid. Silakan coba lagi.'));
+                        this.loading = false;
+                        return;
+                    }
 
                     if (!response.ok) {
-                        if (data.errors) {
+                        if (response.status === 429) {
+                            this.errorMessage = @js(__('Terlalu banyak percobaan. Tunggu beberapa saat.'));
+                        } else if (data.errors) {
                             this.errors = {};
                             for (const [key, messages] of Object.entries(data.errors)) {
                                 this.errors[key] = messages[0];
@@ -234,6 +249,12 @@
                         } else {
                             this.errorMessage = data.error || @js(__('Terjadi kesalahan. Silakan coba lagi.'));
                         }
+                        this.loading = false;
+                        return;
+                    }
+
+                    if (!data.snap_token) {
+                        this.errorMessage = @js(__('Token pembayaran tidak diterima. Silakan coba lagi.'));
                         this.loading = false;
                         return;
                     }
@@ -255,6 +276,7 @@
                         }
                     });
                 } catch (e) {
+                    console.error('Checkout error:', e);
                     this.errorMessage = @js(__('Terjadi kesalahan jaringan. Silakan coba lagi.'));
                     this.loading = false;
                 }

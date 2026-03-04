@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- SEO Meta --}}
-    <title>@hasSection('meta_title')@yield('meta_title')@else@yield('title', setting('site_name', 'SuhastraDev')) â€” {{ setting('site_description', 'Portfolio & Source Code Marketplace') }}@endif</title>
+    <title>@hasSection('meta_title')@yield('meta_title')@else@yield('title', setting('site_name', 'SuhastraDev')) — {{ setting('site_description', 'Portfolio & Source Code Marketplace') }}@endif</title>
     <meta name="description" content="@yield('meta_description', setting('site_description', 'Website Portfolio & Marketplace Source Code oleh Indra Jasa Suhastra'))">
     <link rel="canonical" href="{{ url()->current() }}">
 
@@ -318,6 +318,16 @@
                             </a>
                         </li>
                         @endif
+                        @if (setting('contact_phone'))
+                        <li class="flex items-center space-x-3 group">
+                            <div class="w-8 h-8 bg-dark-800 group-hover:bg-primary-600/20 rounded-lg flex items-center justify-center transition-colors duration-300">
+                                <i class="fa-solid fa-phone text-xs text-primary-400"></i>
+                            </div>
+                            <a href="tel:{{ setting('contact_phone') }}" class="text-sm text-dark-300 hover:text-primary-400 transition-colors">
+                                {{ setting('contact_phone') }}
+                            </a>
+                        </li>
+                        @endif
                         @if (setting('contact_whatsapp'))
                         <li class="flex items-center space-x-3 group">
                             <div class="w-8 h-8 bg-dark-800 group-hover:bg-green-600/20 rounded-lg flex items-center justify-center transition-colors duration-300">
@@ -343,7 +353,7 @@
             {{-- Bottom Footer --}}
             <div class="border-t border-dark-800/60 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p class="text-sm text-dark-500">
-                    {{ setting('footer_text', 'Â© ' . date('Y') . ' SuhastraDev. All rights reserved.') }}
+                    {{ setting('footer_text', '© ' . date('Y') . ' SuhastraDev. All rights reserved.') }}
                 </p>
             </div>
         </div>

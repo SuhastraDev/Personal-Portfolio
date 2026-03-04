@@ -54,7 +54,11 @@ class Order extends Model
             ->first();
 
         if ($lastOrder) {
-            $lastNumber = (int) substr(Str::afterLast($lastOrder->order_number, '-'), 0, 3);
+            // Extract numeric portion: order_number = INV-{date}-{NNN...}{RAND4}
+            $suffix = Str::afterLast($lastOrder->order_number, '-');
+            // Remove the 4-char random tail to get the sequential number
+            $numericPart = substr($suffix, 0, -4);
+            $lastNumber = (int) $numericPart;
             $nextNumber = $lastNumber + 1;
         } else {
             $nextNumber = 1;

@@ -109,6 +109,7 @@
                     <i class="fa-solid fa-camera text-xs text-primary-600"></i>
                 </span>
                 {{ __('Screenshot') }}
+            </h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     @foreach ($portfolio->images as $index => $image)
                     <div class="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 img-zoom" data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">

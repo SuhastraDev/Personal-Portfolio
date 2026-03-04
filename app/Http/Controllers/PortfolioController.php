@@ -23,6 +23,7 @@ class PortfolioController extends Controller
                 $q->whereIn('portfolio_categories.id', $portfolio->categories->pluck('id'));
             })
             ->with('categories')
+            ->latest()
             ->take(3)
             ->get();
 

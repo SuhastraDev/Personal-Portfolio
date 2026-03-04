@@ -142,7 +142,7 @@
                     <a href="{{ route('checkout.show', $product->slug) }}"
                         class="group w-full inline-flex items-center justify-center px-6 py-4 bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-500 hover:to-indigo-500 text-white font-bold rounded-2xl transition-all duration-300 shadow-lg shadow-primary-600/25 hover:shadow-xl hover:shadow-primary-600/40 hover:-translate-y-0.5">
                         <i class="fa-solid fa-cart-shopping mr-2"></i>
-                        {{ __('Beli Sekarang') }} â€” {{ $product->formatted_price }}
+                        {{ __('Beli Sekarang') }} — {{ $product->formatted_price }}
                     </a>
 
                     {{-- Buy via WhatsApp --}}

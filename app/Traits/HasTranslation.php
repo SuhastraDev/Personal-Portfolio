@@ -34,4 +34,25 @@ trait HasTranslation
 
         return parent::__get($key);
     }
+
+    /**
+     * Safely decode JSON that may be double-encoded.
+     * Shared utility for models that store JSON arrays.
+     */
+    public static function safeJsonArray(mixed $value): array
+    {
+        if (is_array($value)) return $value;
+        if (!is_string($value) || $value === '') return [];
+
+        $decoded = json_decode($value, true);
+        if (is_array($decoded)) return $decoded;
+
+        // Handle double-encoded: json string containing json string
+        if (is_string($decoded)) {
+            $second = json_decode($decoded, true);
+            return is_array($second) ? $second : [];
+        }
+
+        return [];
+    }
 }

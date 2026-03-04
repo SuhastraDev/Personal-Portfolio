@@ -41,6 +41,19 @@
                         </div>
                         <div>
                             <p class="text-sm font-medium text-dark-900">{{ __('Email') }}</p>
+                            <a href="mailto:{{ setting('contact_email') }}" class="text-sm text-dark-500 hover:text-primary-600 transition-colors">{{ setting('contact_email') }}</a>
+                        </div>
+                    </div>
+                    @endif
+
+                    @if (setting('contact_phone'))
+                    <div class="flex items-start gap-4 group p-4 bg-gray-50 hover:bg-primary-50 rounded-2xl transition-all duration-500">
+                        <div class="w-12 h-12 bg-primary-100 group-hover:bg-primary-200 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300">
+                            <i class="fa-solid fa-phone text-primary-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-dark-900">{{ __('Telepon') }}</p>
+                            <a href="tel:{{ setting('contact_phone') }}" class="text-sm text-dark-500 hover:text-primary-600 transition-colors">{{ setting('contact_phone') }}</a>
                         </div>
                     </div>
                     @endif

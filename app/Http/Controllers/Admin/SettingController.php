@@ -200,8 +200,16 @@ class SettingController extends Controller
         $path = 'settings/' . $field . '_' . uniqid() . '.webp';
         Storage::disk('public')->put($path, $image->toWebp(85));
 
-        Setting::where('key', $field)->update(['value' => $path]);
+        Setting::updateOrCreate(
+            ['key' => $field],
+            ['value' => $path, 'group' => match($field) {
+                'about_photo' => 'about',
+                'site_logo', 'site_favicon' => 'general',
+                default => 'general',
+            }]
+        );
         clear_setting_cache();
+        \Illuminate\Support\Facades\Cache::flush();
 
         return response()->json([
             'success' => true,

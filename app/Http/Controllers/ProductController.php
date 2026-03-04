@@ -24,12 +24,16 @@ class ProductController extends Controller
 
         $product->load('category', 'tags', 'images');
 
-        $relatedProducts = Product::active()
-            ->where('id', '!=', $product->id)
-            ->where('category_id', $product->category_id)
-            ->with('category')
-            ->take(4)
-            ->get();
+        $relatedProducts = collect();
+        if ($product->category_id) {
+            $relatedProducts = Product::active()
+                ->where('id', '!=', $product->id)
+                ->where('category_id', $product->category_id)
+                ->with('category')
+                ->latest()
+                ->take(4)
+                ->get();
+        }
 
         return view('pages.products.show', compact('product', 'relatedProducts'));
     }

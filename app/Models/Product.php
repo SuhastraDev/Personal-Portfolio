@@ -50,7 +50,7 @@ class Product extends Model
     protected function features(): Attribute
     {
         return Attribute::make(
-            get: fn(mixed $value): array => Portfolio::safeJsonArray($value),
+            get: fn(mixed $value): array => self::safeJsonArray($value),
             set: fn(mixed $value) => is_array($value) ? json_encode($value) : $value,
         );
     }
@@ -61,7 +61,7 @@ class Product extends Model
     protected function featuresEn(): Attribute
     {
         return Attribute::make(
-            get: fn(mixed $value): array => Portfolio::safeJsonArray($value),
+            get: fn(mixed $value): array => self::safeJsonArray($value),
             set: fn(mixed $value) => is_array($value) ? json_encode($value) : $value,
         );
     }
@@ -72,7 +72,7 @@ class Product extends Model
     protected function techStack(): Attribute
     {
         return Attribute::make(
-            get: fn(mixed $value): array => Portfolio::safeJsonArray($value),
+            get: fn(mixed $value): array => self::safeJsonArray($value),
             set: fn(mixed $value) => is_array($value) ? json_encode($value) : $value,
         );
     }

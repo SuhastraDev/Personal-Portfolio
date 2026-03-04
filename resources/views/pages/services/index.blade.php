@@ -48,7 +48,7 @@
                     <p class="font-heading text-lg font-bold text-primary-600">
                         Rp {{ number_format($service->price_start, 0, ',', '.') }}
                         @if($service->price_end)
-                        â€” Rp {{ number_format($service->price_end, 0, ',', '.') }}
+                        — Rp {{ number_format($service->price_end, 0, ',', '.') }}
                         @else
                         ~
                         @endif
@@ -89,3 +89,6 @@
             <i class="fa-solid fa-paper-plane mr-2 group-hover:rotate-12 transition-transform"></i>
             {{ __('Hubungi Saya') }}
         </a>
+    </div>
+</section>
+@endsection

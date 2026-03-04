@@ -14,8 +14,15 @@ class CheckoutController extends Controller
 {
     public function __construct()
     {
-        MidtransConfig::$serverKey = config('midtrans.server_key');
-        MidtransConfig::$clientKey = config('midtrans.client_key');
+        $serverKey = config('midtrans.server_key');
+        $clientKey = config('midtrans.client_key');
+
+        if (empty($serverKey) || empty($clientKey)) {
+            Log::error('Midtrans: Server key or client key is not configured.');
+        }
+
+        MidtransConfig::$serverKey = $serverKey;
+        MidtransConfig::$clientKey = $clientKey;
         MidtransConfig::$isProduction = config('midtrans.is_production');
         MidtransConfig::$isSanitized = config('midtrans.is_sanitized');
         MidtransConfig::$is3ds = config('midtrans.is_3ds');
@@ -98,17 +105,25 @@ class CheckoutController extends Controller
 
             $order->update(['payment_ref' => $snapToken]);
 
+            Log::info("Checkout success: Order {$order->order_number}, Product: {$product->title}, Amount: {$order->amount}");
+
             return response()->json([
                 'snap_token' => $snapToken,
                 'order_number' => $order->order_number,
             ]);
         } catch (\Exception $e) {
-            Log::error('Midtrans Snap Error: ' . $e->getMessage());
+            Log::error('Midtrans Snap Error: ' . $e->getMessage(), [
+                'order_number' => $order->order_number ?? null,
+                'product_id' => $product->id,
+                'amount' => $product->price,
+                'server_key_set' => !empty(config('midtrans.server_key')),
+                'is_production' => config('midtrans.is_production'),
+            ]);
 
             $order->delete();
 
             return response()->json([
-                'error' => 'Gagal memproses pembayaran. Silakan coba lagi.',
+                'error' => 'Gagal memproses pembayaran. Silakan coba lagi nanti.',
             ], 500);
         }
     }

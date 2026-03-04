@@ -41,6 +41,11 @@ class DownloadController extends Controller
             abort(404, 'File produk tidak ditemukan.');
         }
 
+        // Path traversal protection
+        if (str_contains($product->file_path, '..') || str_starts_with($product->file_path, '/')) {
+            abort(403, 'Path file tidak valid.');
+        }
+
         if (! Storage::exists($product->file_path)) {
             abort(404, 'File produk tidak ditemukan di server.');
         }
