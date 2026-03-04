@@ -345,9 +345,6 @@
                 <p class="text-sm text-dark-500">
                     {{ setting('footer_text', '© ' . date('Y') . ' SuhastraDev. All rights reserved.') }}
                 </p>
-                <p class="text-sm text-dark-500">
-                    {{ __('Dibuat dengan') }} <span class="text-red-400 animate-pulse">&hearts;</span> {{ __('menggunakan Laravel & TailwindCSS') }}
-                </p>
             </div>
         </div>
     </footer>
