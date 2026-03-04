@@ -252,9 +252,7 @@
 <script>
     function settingsForm() {
         return {
-            activeTab: '{{ request('
-            tab ', '
-            hero ') }}',
+            activeTab: '{{ request("tab", "hero") }}',
             saving: false,
             alertMessage: '',
             alertType: 'success',
