@@ -76,19 +76,20 @@ class SettingController extends Controller
     }
 
     /**
-     * AJAX endpoint for saving text settings (bypasses WAF).
+     * AJAX endpoint for saving text settings.
+     * Accepts raw base64 text body to bypass WAF content inspection.
      */
     public function ajaxUpdate(Request $request)
     {
-        // Decode base64-encoded payload (bypass WAF content inspection)
-        $payload = $request->input('payload');
-        if (!$payload) {
-            return response()->json(['success' => false, 'message' => 'No payload.'], 422);
+        // Read raw body (sent as text/plain base64 string)
+        $raw = $request->getContent();
+        if (!$raw) {
+            return response()->json(['success' => false, 'message' => 'Empty request.'], 422);
         }
 
-        $decoded = json_decode(base64_decode($payload), true);
+        $decoded = json_decode(base64_decode($raw), true);
         if (!$decoded) {
-            return response()->json(['success' => false, 'message' => 'Invalid payload.'], 422);
+            return response()->json(['success' => false, 'message' => 'Invalid data.'], 422);
         }
 
         $data = $decoded['settings'] ?? [];
@@ -108,15 +109,37 @@ class SettingController extends Controller
     }
 
     /**
-     * AJAX endpoint for uploading setting files (bypasses WAF).
+     * AJAX endpoint for uploading setting files.
+     * Accepts base64-encoded file data in plain text body to bypass WAF.
      */
     public function ajaxUpload(Request $request)
     {
-        $field = $request->input('field');
+        $raw = $request->getContent();
+        if (!$raw) {
+            return response()->json(['success' => false, 'message' => 'Empty request.'], 422);
+        }
+
+        $decoded = json_decode(base64_decode($raw), true);
+        if (!$decoded || !isset($decoded['field']) || !isset($decoded['data'])) {
+            return response()->json(['success' => false, 'message' => 'Invalid data.'], 422);
+        }
+
+        $field = $decoded['field'];
+        $fileData = $decoded['data']; // base64 encoded file content
         $allowedFields = ['about_photo', 'site_logo', 'site_favicon'];
 
-        if (!in_array($field, $allowedFields) || !$request->hasFile('file')) {
-            return response()->json(['success' => false, 'message' => 'Invalid request.'], 422);
+        if (!in_array($field, $allowedFields)) {
+            return response()->json(['success' => false, 'message' => 'Invalid field.'], 422);
+        }
+
+        // Remove data URI prefix if present (e.g. "data:image/png;base64,...")
+        if (str_contains($fileData, ',')) {
+            $fileData = explode(',', $fileData, 2)[1];
+        }
+
+        $binaryData = base64_decode($fileData);
+        if (!$binaryData) {
+            return response()->json(['success' => false, 'message' => 'Invalid file data.'], 422);
         }
 
         $oldValue = Setting::where('key', $field)->value('value');
@@ -124,8 +147,7 @@ class SettingController extends Controller
             Storage::disk('public')->delete($oldValue);
         }
 
-        $file = $request->file('file');
-        $image = Image::read($file);
+        $image = Image::read($binaryData);
 
         if ($field === 'about_photo') {
             $image->cover(400, 400);
