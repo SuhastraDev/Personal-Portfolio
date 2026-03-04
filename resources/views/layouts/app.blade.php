@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}" class="scroll-smooth">
 
 <head>
@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- SEO Meta --}}
-    <title>@hasSection('meta_title')@yield('meta_title')@else@yield('title', setting('site_name', 'SuhastraDev')) — {{ setting('site_description', 'Portfolio & Source Code Marketplace') }}@endif</title>
+    <title>@hasSection('meta_title')@yield('meta_title')@else@yield('title', setting('site_name', 'SuhastraDev')) â€” {{ setting('site_description', 'Portfolio & Source Code Marketplace') }}@endif</title>
     <meta name="description" content="@yield('meta_description', setting('site_description', 'Website Portfolio & Marketplace Source Code oleh Indra Jasa Suhastra'))">
     <link rel="canonical" href="{{ url()->current() }}">
 
@@ -57,8 +57,8 @@
 <body class="font-sans antialiased text-dark-800 bg-white">
 
     {{-- Navbar (persisted across SPA navigations) --}}
-    @persist('navbar')
-    <div x-data="appNav()" x-on:livewire:navigated.window="onNavigated()">
+
+    <div x-data="appNav()" >
         <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
             :class="scrolled ? 'bg-white/90 backdrop-blur-xl shadow-lg shadow-dark-900/5 border-b border-gray-100/50' : 'bg-transparent'">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -88,7 +88,7 @@
 
                         @foreach ($navItems as $item)
                         @php $navPath = parse_url(route($item['route']), PHP_URL_PATH) ?: '/'; @endphp
-                        <a href="{{ route($item['route']) }}" wire:navigate
+                        <a href="{{ route($item['route']) }}"
                             class="relative px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300"
                             :class="scrolled
                                ? (isActive('{{ $navPath }}') ? 'text-primary-600 bg-primary-50/80' : 'text-dark-600 hover:text-primary-600 hover:bg-primary-50/50')
@@ -113,7 +113,7 @@
                         </a>
 
                         {{-- CTA Button --}}
-                        <a href="{{ route('contact') }}" wire:navigate
+                        <a href="{{ route('contact') }}"
                             class="inline-flex items-center px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 hover:-translate-y-0.5"
                             :class="scrolled
                            ? 'bg-gradient-to-r from-primary-600 to-indigo-600 text-white hover:shadow-lg hover:shadow-primary-600/25'
@@ -162,7 +162,7 @@
 
             {{-- Sidebar Header --}}
             <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                <a href="{{ route('home') }}" wire:navigate @click="mobileMenu = false" class="flex items-center space-x-2">
+                <a href="{{ route('home') }}" @click="mobileMenu = false" class="flex items-center space-x-2">
                     <img src="{{ asset('images/logo.png') }}" alt="SuhastraDev" class="w-9 h-9 rounded-lg object-contain">
                     <span class="font-heading font-bold text-xl text-dark-900">
                         Suhastra<span class="text-primary-500">Dev</span>
@@ -189,7 +189,7 @@
                 @endphp
                 @foreach ($navItems as $item)
                 @php $navPath = parse_url(route($item['route']), PHP_URL_PATH) ?: '/'; @endphp
-                <a href="{{ route($item['route']) }}" wire:navigate
+                <a href="{{ route($item['route']) }}"
                     @click="mobileMenu = false"
                     class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200"
                     :class="isActive('{{ $navPath }}')
@@ -210,7 +210,7 @@
                     <i class="fa-solid fa-globe text-xs"></i>
                     {{ app()->getLocale() === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia' }}
                 </a>
-                <a href="{{ route('contact') }}" wire:navigate @click="mobileMenu = false"
+                <a href="{{ route('contact') }}" @click="mobileMenu = false"
                     class="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-semibold text-white bg-primary-600 rounded-xl hover:bg-primary-700 transition-all shadow-sm">
                     <i class="fa-solid fa-paper-plane text-xs"></i>
                     {{ __('Hubungi Saya') }}
@@ -218,7 +218,7 @@
             </div>
         </aside>
     </div>
-    @endpersist
+
 
     {{-- Flash Messages --}}
     @if (session('success'))
@@ -245,7 +245,7 @@
     </main>
 
     {{-- Footer (persisted across SPA navigations) --}}
-    @persist('footer')
+
     <footer class="bg-dark-900 text-white relative overflow-hidden">
         {{-- Decorative gradient top border --}}
         <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-500 to-transparent"></div>
@@ -258,7 +258,7 @@
             <div class="py-12 lg:py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {{-- Brand --}}
                 <div class="lg:col-span-2">
-                    <a href="{{ route('home') }}" wire:navigate class="flex items-center space-x-2.5 mb-4 group">
+                    <a href="{{ route('home') }}" class="flex items-center space-x-2.5 mb-4 group">
                         <img src="{{ asset('images/logo.png') }}" alt="SuhastraDev" class="w-9 h-9 rounded-xl shadow-lg shadow-primary-600/25 group-hover:shadow-primary-600/40 transition-all duration-300 group-hover:scale-105 object-contain">
                         <span class="font-heading font-bold text-xl text-white">
                             Suhastra<span class="text-primary-400">Dev</span>
@@ -294,13 +294,13 @@
                 <div>
                     <h4 class="font-heading font-semibold text-sm uppercase tracking-wider text-dark-400 mb-4">{{ __('Navigasi') }}</h4>
                     <ul class="space-y-2.5">
-                        <li><a href="{{ route('home') }}" wire:navigate class="text-sm text-dark-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block">{{ __('Home') }}</a></li>
-                        <li><a href="{{ route('about') }}" wire:navigate class="text-sm text-dark-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block">{{ __('Tentang Saya') }}</a></li>
-                        <li><a href="{{ route('portfolio.index') }}" wire:navigate class="text-sm text-dark-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block">{{ __('Portfolio') }}</a></li>
-                        <li><a href="{{ route('products.index') }}" wire:navigate class="text-sm text-dark-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block">{{ __('Produk') }}</a></li>
-                        <li><a href="{{ route('services.index') }}" wire:navigate class="text-sm text-dark-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block">{{ __('Layanan') }}</a></li>
-                        <li><a href="{{ route('contact') }}" wire:navigate class="text-sm text-dark-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block">{{ __('Kontak') }}</a></li>
-                        <li><a href="{{ route('order.status') }}" wire:navigate class="text-sm text-dark-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block">{{ __('Cek Pesanan') }}</a></li>
+                        <li><a href="{{ route('home') }}" class="text-sm text-dark-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block">{{ __('Home') }}</a></li>
+                        <li><a href="{{ route('about') }}" class="text-sm text-dark-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block">{{ __('Tentang Saya') }}</a></li>
+                        <li><a href="{{ route('portfolio.index') }}" class="text-sm text-dark-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block">{{ __('Portfolio') }}</a></li>
+                        <li><a href="{{ route('products.index') }}" class="text-sm text-dark-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block">{{ __('Produk') }}</a></li>
+                        <li><a href="{{ route('services.index') }}" class="text-sm text-dark-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block">{{ __('Layanan') }}</a></li>
+                        <li><a href="{{ route('contact') }}" class="text-sm text-dark-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block">{{ __('Kontak') }}</a></li>
+                        <li><a href="{{ route('order.status') }}" class="text-sm text-dark-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block">{{ __('Cek Pesanan') }}</a></li>
                     </ul>
                 </div>
 
@@ -343,12 +343,12 @@
             {{-- Bottom Footer --}}
             <div class="border-t border-dark-800/60 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p class="text-sm text-dark-500">
-                    {{ setting('footer_text', '© ' . date('Y') . ' SuhastraDev. All rights reserved.') }}
+                    {{ setting('footer_text', 'Â© ' . date('Y') . ' SuhastraDev. All rights reserved.') }}
                 </p>
             </div>
         </div>
     </footer>
-    @endpersist
+
 
     {{-- WhatsApp Floating Button --}}
     @if (setting('contact_whatsapp'))

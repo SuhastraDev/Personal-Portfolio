@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', $portfolio->translated_title)
 @section('meta_title', $portfolio->translated_meta_title ?: $portfolio->translated_title)
@@ -18,11 +18,11 @@
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav class="flex items-center space-x-2 text-sm text-dark-400 mb-6" data-aos="fade-up">
-            <a href="{{ route('home') }}" wire:navigate class="hover:text-white transition-colors duration-200">{{ __('Home') }}</a>
+            <a href="{{ route('home') }}" class="hover:text-white transition-colors duration-200">{{ __('Home') }}</a>
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
             </svg>
-            <a href="{{ route('portfolio.index') }}" wire:navigate class="hover:text-white transition-colors duration-200">{{ __('Portfolio') }}</a>
+            <a href="{{ route('portfolio.index') }}" class="hover:text-white transition-colors duration-200">{{ __('Portfolio') }}</a>
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
             </svg>
@@ -131,7 +131,7 @@
         <h3 class="font-heading text-2xl font-bold text-dark-900 mb-8" data-aos="fade-up">{{ __('Portfolio Terkait') }}</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             @foreach ($relatedPortfolios as $index => $related)
-            <a href="{{ route('portfolio.show', $related->slug) }}" wire:navigate class="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-primary-200 transition-all duration-500 hover:-translate-y-2 card-glow" data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
+            <a href="{{ route('portfolio.show', $related->slug) }}" class="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-primary-200 transition-all duration-500 hover:-translate-y-2 card-glow" data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
                 <div class="aspect-video bg-gray-100 overflow-hidden relative">
                     @if ($related->thumbnail)
                     <img src="{{ asset('storage/' . $related->thumbnail) }}" alt="{{ $related->translated_title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy">

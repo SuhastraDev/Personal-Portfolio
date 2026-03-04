@@ -104,15 +104,29 @@ class SettingController extends Controller
 
         // Map keys to groups for auto-creation
         $groupMap = [
-            'hero_title' => 'hero', 'hero_subtitle' => 'hero', 'hero_description' => 'hero',
-            'hero_cta_text' => 'hero', 'hero_cta_url' => 'hero',
-            'about_name' => 'about', 'about_bio' => 'about', 'about_photo' => 'about',
-            'about_experience_years' => 'about', 'about_projects_count' => 'about', 'about_clients_count' => 'about',
-            'contact_email' => 'contact', 'contact_phone' => 'contact', 'contact_whatsapp' => 'contact',
-            'contact_address' => 'contact', 'contact_github' => 'contact', 'contact_linkedin' => 'contact',
+            'hero_title' => 'hero',
+            'hero_subtitle' => 'hero',
+            'hero_description' => 'hero',
+            'hero_cta_text' => 'hero',
+            'hero_cta_url' => 'hero',
+            'about_name' => 'about',
+            'about_bio' => 'about',
+            'about_photo' => 'about',
+            'about_experience_years' => 'about',
+            'about_projects_count' => 'about',
+            'about_clients_count' => 'about',
+            'contact_email' => 'contact',
+            'contact_phone' => 'contact',
+            'contact_whatsapp' => 'contact',
+            'contact_address' => 'contact',
+            'contact_github' => 'contact',
+            'contact_linkedin' => 'contact',
             'contact_instagram' => 'contact',
-            'site_name' => 'general', 'site_logo' => 'general', 'site_favicon' => 'general',
-            'site_description' => 'general', 'footer_text' => 'general',
+            'site_name' => 'general',
+            'site_logo' => 'general',
+            'site_favicon' => 'general',
+            'site_description' => 'general',
+            'footer_text' => 'general',
         ];
 
         foreach ($data as $key => $value) {

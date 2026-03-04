@@ -1,4 +1,4 @@
-<div>
+﻿<div>
     {{-- Filter Buttons --}}
     <div class="flex flex-wrap gap-2 justify-center mb-12">
         <button wire:click="filterCategory(null)"
@@ -16,7 +16,7 @@
     {{-- Portfolio Grid --}}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" wire:loading.class="opacity-50">
         @forelse ($portfolios as $portfolio)
-        <a href="{{ route('portfolio.show', $portfolio->slug) }}" wire:navigate
+        <a href="{{ route('portfolio.show', $portfolio->slug) }}"
             class="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-primary-200 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 card-glow">
             <div class="aspect-video bg-gray-100 overflow-hidden relative">
                 @if ($portfolio->thumbnail)

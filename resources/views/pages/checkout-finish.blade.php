@@ -1,7 +1,7 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', __('Status Pesanan'))
-@section('meta_title', __('Status Pesanan') . ' — ' . $order->order_number)
+@section('meta_title', __('Status Pesanan') . ' â€” ' . $order->order_number)
 
 @section('content')
 <section class="bg-gradient-to-br from-dark-950 via-dark-900 to-primary-950 pt-32 pb-20 relative overflow-hidden">
@@ -125,7 +125,7 @@
                     <div class="mt-3 flex items-start gap-2 p-3 bg-amber-50 rounded-lg">
                         <i class="fa-solid fa-triangle-exclamation text-amber-500 text-xs mt-0.5"></i>
                         <p class="text-xs text-amber-700">
-                            {{ __('Download tersisa:') }} <strong>{{ 2 - $order->download_count }}x</strong> •
+                            {{ __('Download tersisa:') }} <strong>{{ 2 - $order->download_count }}x</strong> â€¢
                             {{ __('Berlaku hingga:') }} <strong>{{ $order->download_expires_at ? $order->download_expires_at->format('d M Y, H:i') . ' WIB' : '-' }}</strong>
                         </p>
                     </div>
@@ -152,12 +152,12 @@
 
         {{-- Actions --}}
         <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center" data-aos="fade-up" data-aos-delay="100">
-            <a href="{{ route('products.index') }}" wire:navigate
+            <a href="{{ route('products.index') }}"
                 class="inline-flex items-center justify-center px-6 py-3.5 bg-gray-100 hover:bg-gray-200 text-dark-700 font-semibold rounded-2xl transition-all duration-300 hover:-translate-y-0.5">
                 <i class="fa-solid fa-arrow-left mr-2"></i>
                 {{ __('Kembali ke Produk') }}
             </a>
-            <a href="{{ route('order.status') }}" wire:navigate
+            <a href="{{ route('order.status') }}"
                 class="inline-flex items-center justify-center px-6 py-3.5 bg-white border border-gray-200 hover:bg-gray-50 hover:border-primary-200 text-dark-700 font-semibold rounded-2xl transition-all duration-300 hover:-translate-y-0.5">
                 <i class="fa-solid fa-magnifying-glass mr-2"></i>
                 {{ __('Cek Status Pesanan') }}
