@@ -202,7 +202,7 @@ class SettingController extends Controller
 
         Setting::updateOrCreate(
             ['key' => $field],
-            ['value' => $path, 'group' => match($field) {
+            ['value' => $path, 'group' => match ($field) {
                 'about_photo' => 'about',
                 'site_logo', 'site_favicon' => 'general',
                 default => 'general',

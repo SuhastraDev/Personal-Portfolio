@@ -53,13 +53,13 @@
                 {{ setting('hero_description', 'Web developer berpengalaman yang menyediakan jasa pembuatan website berkualitas dan marketplace source code siap pakai untuk kebutuhan bisnis Anda.') }}
             </p>
             <div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="300" data-aos-duration="700">
-                <a href="{{ route('portfolio.index') }}"
+                <a href="{{ route('portfolio.index') }}" wire:navigate
                     class="group inline-flex items-center px-7 py-4 bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-500 hover:to-indigo-500 text-white font-semibold rounded-2xl transition-all duration-300 shadow-xl shadow-primary-600/25 hover:shadow-2xl hover:shadow-primary-600/40 hover:-translate-y-1">
                     <i class="fa-solid fa-images mr-2.5 group-hover:scale-110 transition-transform duration-300"></i>
                     {{ setting('hero_cta_text', 'Lihat Portfolio') }}
                     <i class="fa-solid fa-arrow-right ml-2 text-sm opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
                 </a>
-                <a href="{{ route('contact') }}"
+                <a href="{{ route('contact') }}" wire:navigate
                     class="group inline-flex items-center px-7 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-2xl transition-all duration-300 backdrop-blur-md border border-white/20 hover:border-white/30 hover:-translate-y-1 hover:shadow-lg">
                     <i class="fa-solid fa-paper-plane mr-2.5 group-hover:rotate-12 transition-transform duration-300"></i>
                     {{ __('Hubungi Saya') }}
@@ -167,14 +167,14 @@
                 <h2 class="font-heading text-3xl lg:text-4xl font-bold text-dark-900 mb-3">{{ __('Portfolio Unggulan') }}</h2>
                 <p class="text-dark-500 max-w-xl">{{ __('Beberapa proyek terbaik yang telah saya kerjakan.') }}</p>
             </div>
-            <a href="{{ route('portfolio.index') }}" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-primary-600 hover:text-white bg-primary-50 hover:bg-primary-600 rounded-xl transition-all duration-300 group">
+            <a href="{{ route('portfolio.index') }}" wire:navigate class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-primary-600 hover:text-white bg-primary-50 hover:bg-primary-600 rounded-xl transition-all duration-300 group">
                 {{ __('Lihat Semua') }}
                 <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
             </a>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($featuredPortfolios as $index => $portfolio)
-            <a href="{{ route('portfolio.show', $portfolio->slug) }}"
+            <a href="{{ route('portfolio.show', $portfolio->slug) }}" wire:navigate
                 class="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-primary-200 transition-all duration-500 hover:-translate-y-2 card-glow"
                 data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
                 <div class="aspect-video bg-gray-100 overflow-hidden relative">
@@ -210,7 +210,7 @@
             @endforeach
         </div>
         <div class="text-center mt-10 sm:hidden">
-            <a href="{{ route('portfolio.index') }}" class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-primary-600 bg-primary-50 rounded-xl hover:bg-primary-100 transition-colors">
+            <a href="{{ route('portfolio.index') }}" wire:navigate class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-primary-600 bg-primary-50 rounded-xl hover:bg-primary-100 transition-colors">
                 {{ __('Lihat Semua Portfolio') }}
                 <i class="fa-solid fa-arrow-right text-xs"></i>
             </a>
@@ -254,7 +254,7 @@
             @endforeach
         </div>
         <div class="text-center mt-10">
-            <a href="{{ route('services.index') }}" class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-xl transition-all duration-300 group hover:-translate-y-0.5">
+            <a href="{{ route('services.index') }}" wire:navigate class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-xl transition-all duration-300 group hover:-translate-y-0.5">
                 {{ __('Lihat Semua Layanan') }}
                 <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
             </a>
@@ -327,12 +327,12 @@
             {{ __('Mari diskusikan bagaimana saya bisa membantu mewujudkan ide digital Anda menjadi kenyataan.') }}
         </p>
         <div class="flex flex-wrap justify-center gap-4" data-aos="fade-up" data-aos-delay="200">
-            <a href="{{ route('contact') }}"
+            <a href="{{ route('contact') }}" wire:navigate
                 class="group inline-flex items-center px-8 py-4 bg-white text-primary-700 font-bold rounded-2xl hover:bg-gray-50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1">
                 <i class="fa-solid fa-paper-plane mr-2.5 group-hover:rotate-12 transition-transform duration-300"></i>
                 {{ __('Mulai Diskusi') }}
             </a>
-            <a href="{{ route('products.index') }}"
+            <a href="{{ route('products.index') }}" wire:navigate
                 class="group inline-flex items-center px-8 py-4 bg-white/10 text-white font-bold rounded-2xl hover:bg-white/20 transition-all duration-300 backdrop-blur-sm border border-white/20 hover:-translate-y-1 hover:shadow-lg">
                 <i class="fa-solid fa-cart-shopping mr-2.5 group-hover:scale-110 transition-transform duration-300"></i>
                 {{ __('Jelajahi Source Code') }}
