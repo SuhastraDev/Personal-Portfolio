@@ -71,7 +71,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
 
     // Settings
     Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
-    Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+    Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
 
     // Skills
     Route::resource('skills', SkillController::class)->except(['show']);

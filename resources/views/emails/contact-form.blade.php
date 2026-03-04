@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesan Baru dari Website</title>
 </head>
+
 <body style="margin: 0; padding: 0; background-color: #111827; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
     <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
 
@@ -95,4 +97,5 @@
         </div>
     </div>
 </body>
+
 </html>

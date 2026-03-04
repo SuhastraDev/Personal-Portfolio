@@ -29,7 +29,6 @@
 
     <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        @method('PUT')
         <input type="hidden" name="active_tab" :value="activeTab">
 
         <div class="p-6">
