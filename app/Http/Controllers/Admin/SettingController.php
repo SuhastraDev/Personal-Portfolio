@@ -63,6 +63,7 @@ class SettingController extends Controller
         }
 
         clear_setting_cache();
+        \Illuminate\Support\Facades\Cache::flush();
 
         $tab = $request->input('active_tab', 'hero');
 
@@ -104,6 +105,8 @@ class SettingController extends Controller
         }
 
         clear_setting_cache();
+        // Also flush entire cache to ensure frontend reflects changes
+        \Illuminate\Support\Facades\Cache::flush();
 
         return response()->json(['success' => true, 'message' => 'Pengaturan berhasil disimpan.']);
     }
