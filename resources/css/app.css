@@ -609,7 +609,7 @@ main {
    ================================================ */
 @layer components {
     .portfolio-card {
-        @apply card-outline overflow-hidden group;
+        @apply card-outline overflow-hidden;
         background: white;
     }
     .portfolio-card-img {
