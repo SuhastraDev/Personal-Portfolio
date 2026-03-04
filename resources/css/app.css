@@ -91,26 +91,6 @@
     box-shadow: 0 0 10px #8b5cf6, 0 0 5px #8b5cf6 !important;
 }
 
-/* Main content fade on navigate */
-main {
-    animation: page-enter 0.38s var(--ease-out) both;
-}
-
-@keyframes page-enter {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0);    }
-}
-
-/* Outgoing page */
-.navigate-away main {
-    animation: page-leave 0.2s var(--ease-smooth) both;
-}
-
-@keyframes page-leave {
-    from { opacity: 1; transform: translateY(0);    }
-    to   { opacity: 0; transform: translateY(-6px); }
-}
-
 
 /* ================================================
    TYPOGRAPHY UTILITIES

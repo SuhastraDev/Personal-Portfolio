@@ -152,12 +152,12 @@
 
         {{-- Actions --}}
         <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center" data-aos="fade-up" data-aos-delay="100">
-            <a href="{{ route('products.index') }}"
+            <a href="{{ route('products.index') }}" wire:navigate
                 class="inline-flex items-center justify-center px-6 py-3.5 bg-gray-100 hover:bg-gray-200 text-dark-700 font-semibold rounded-2xl transition-all duration-300 hover:-translate-y-0.5">
                 <i class="fa-solid fa-arrow-left mr-2"></i>
                 {{ __('Kembali ke Produk') }}
             </a>
-            <a href="{{ route('order.status') }}"
+            <a href="{{ route('order.status') }}" wire:navigate
                 class="inline-flex items-center justify-center px-6 py-3.5 bg-white border border-gray-200 hover:bg-gray-50 hover:border-primary-200 text-dark-700 font-semibold rounded-2xl transition-all duration-300 hover:-translate-y-0.5">
                 <i class="fa-solid fa-magnifying-glass mr-2"></i>
                 {{ __('Cek Status Pesanan') }}

@@ -84,7 +84,7 @@
         </div>
         <h2 class="font-heading text-3xl lg:text-4xl font-bold text-white mb-4" data-aos="fade-up">{{ __('Butuh Layanan Custom?') }}</h2>
         <p class="text-primary-100 mb-8 text-lg" data-aos="fade-up" data-aos-delay="100">{{ __('Punya kebutuhan spesifik? Mari diskusikan proyek Anda bersama saya.') }}</p>
-        <a href="{{ route('contact') }}"
+        <a href="{{ route('contact') }}" wire:navigate
             class="group inline-flex items-center px-8 py-4 bg-white text-primary-700 font-bold rounded-2xl hover:bg-gray-50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
             <i class="fa-solid fa-paper-plane mr-2 group-hover:rotate-12 transition-transform"></i>
             {{ __('Hubungi Saya') }}

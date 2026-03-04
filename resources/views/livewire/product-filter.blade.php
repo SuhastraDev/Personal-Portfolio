@@ -35,7 +35,7 @@
     {{-- Product Grid --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" wire:loading.class="opacity-50">
         @forelse ($products as $product)
-        <a href="{{ route('products.show', $product->slug) }}"
+        <a href="{{ route('products.show', $product->slug) }}" wire:navigate
             class="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-primary-200 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 card-glow">
             <div class="aspect-video bg-gray-100 overflow-hidden relative">
                 @if ($product->thumbnail)

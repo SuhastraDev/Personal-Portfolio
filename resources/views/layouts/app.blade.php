@@ -49,70 +49,31 @@
     @livewireStyles
 
     <style>
-        /* ── Scrollbar ── */
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #6366f1, #8b5cf6);
-            border-radius: 999px;
-        }
-
-        /* ── Font rendering ── */
-        *,
-        *::before,
-        *::after {
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* ══════════════════════════════════════════
-           PAGE TRANSITION — inti dari smooth navigate
-           ══════════════════════════════════════════
-
-           Cara kerja:
-           1. livewire:navigate      → tambah .leaving  → main fade+slide out (100ms)
-           2. livewire:navigating    → konten lama pergi, main sudah transparent
-           3. livewire:navigated     → hapus .leaving, tambah .entering → main fade+slide in (300ms)
-           4. animasi selesai        → hapus .entering
-        */
-
-        main {
-            /* Default state: terlihat, siap menerima transisi */
+        /* ── Page transition (only works with wire:navigate) ── */
+        main#main-content {
             opacity: 1;
             transform: translateY(0);
-            transition: opacity 0ms, transform 0ms;
-            /* default: instan */
         }
 
-        /* Fase KELUAR — konten lama menghilang */
-        main.page-leaving {
+        main#main-content.page-leaving {
             opacity: 0;
             transform: translateY(-6px);
-            transition: opacity 120ms ease-in, transform 120ms ease-in;
+            transition: opacity 100ms ease-in, transform 100ms ease-in;
         }
 
-        /* Fase MASUK — konten baru muncul */
-        main.page-entering {
+        main#main-content.page-entering {
             opacity: 0;
-            transform: translateY(10px);
-            /* Tidak ada transition di sini karena kita set opacity dulu ke 0,
-               lalu di frame berikutnya tambah transition dan ubah ke 1 */
+            transform: translateY(8px);
         }
 
-        main.page-entering-active {
+        main#main-content.page-entering-active {
             opacity: 1;
             transform: translateY(0);
-            transition: opacity 280ms cubic-bezier(0, 0, .2, 1),
-                transform 280ms cubic-bezier(0, 0, .2, 1);
+            transition: opacity 250ms cubic-bezier(0, 0, .2, 1),
+                transform 250ms cubic-bezier(0, 0, .2, 1);
         }
 
-        /* ── Sidebar active indicator bar ── */
+        /* ── Mobile sidebar ── */
         .sidebar-link {
             position: relative;
             transition: padding-left .22s cubic-bezier(.34, 1.56, .64, 1),
@@ -145,17 +106,10 @@
             padding-left: 1.35rem;
         }
 
-        /* ── WhatsApp pulse ring ── */
+        /* ── WhatsApp pulse ── */
         @keyframes wa-ring {
-            0% {
-                transform: scale(1);
-                opacity: .6;
-            }
-
-            100% {
-                transform: scale(1.9);
-                opacity: 0;
-            }
+            0% { transform: scale(1); opacity: .6; }
+            100% { transform: scale(1.9); opacity: 0; }
         }
 
         .wa-ring {
